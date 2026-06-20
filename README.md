@@ -2,22 +2,6 @@
 
 Chào mừng đến với kho lưu trữ (Repository) mã nguồn mở của dự án **Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn**. Dự án áp dụng kiến trúc chuẩn của Dữ liệu lớn (Big Data) bao gồm **Apache Spark** (Xử lý phân tán) và **MongoDB** (Lớp lưu trữ NoSQL tốc độ cao).
 
-## 📂 Cấu Trúc Thư Mục Chuẩn
-
-Dự án được phân chia thành các module độc lập giúp các thành viên dễ dàng code và quản lý:
-
-```text
-bigdata_project/
-├── data/               # Thư mục chứa dữ liệu thô (Dataset). Đã được .gitignore chặn để không đẩy lên Github.
-├── docs/               # Thư mục chứa tài liệu: Kế hoạch, báo cáo Word, cấu trúc Slide, cẩm nang Git.
-├── src/                # Mã nguồn chính của dự án (Source code)
-│   ├── etl/            # Chứa script nạp dữ liệu và làm sạch bằng Spark SQL.
-│   ├── ml/             # Chứa script huấn luyện thuật toán ALS phân tán (Spark MLlib).
-│   ├── nosql/          # Chứa script đồng bộ kết quả ma trận từ Spark sang MongoDB.
-│   └── web/            # Chứa mã nguồn giao diện Gradio/Streamlit tương tác trực tiếp NoSQL.
-├── .gitignore          # File cấu hình Git để ẩn các file không cần thiết (cache, log, data).
-└── README.md           # File tổng quan bạn đang đọc.
-```
 
 ## 🚀 Kiến trúc Hệ thống
 1. **Luồng tính toán ẩn (Offline):** Dữ liệu thô $\rightarrow$ `src/etl` (Làm sạch) $\rightarrow$ `src/ml` (Chạy AI/ALS).
@@ -57,3 +41,20 @@ Remove-Item -Path "ml-100k.zip" -Force
 ```
 
 Sau khi chạy xong, bạn sẽ thấy thư mục `data/ml-100k` xuất hiện đầy đủ trên máy bạn (gồm file `u.data` và `u.item`). Lúc này bạn có thể bắt tay vào code phần Spark ETL được rồi!
+
+## 📂 Cấu Trúc Thư Mục Chuẩn
+
+Dự án được phân chia thành các module độc lập giúp các thành viên dễ dàng code và quản lý:
+
+```text
+bigdata_project/
+├── data/               # Thư mục chứa dữ liệu thô (Dataset). Đã được .gitignore chặn để không đẩy lên Github.
+├── docs/               # Thư mục chứa tài liệu: Kế hoạch, báo cáo Word, cấu trúc Slide, cẩm nang Git.
+├── src/                # Mã nguồn chính của dự án (Source code)
+│   ├── etl/            # Chứa script nạp dữ liệu và làm sạch bằng Spark SQL.
+│   ├── ml/             # Chứa script huấn luyện thuật toán ALS phân tán (Spark MLlib).
+│   ├── nosql/          # Chứa script đồng bộ kết quả ma trận từ Spark sang MongoDB.
+│   └── web/            # Chứa mã nguồn giao diện Gradio/Streamlit tương tác trực tiếp NoSQL.
+├── .gitignore          # File cấu hình Git để ẩn các file không cần thiết (cache, log, data).
+└── README.md           # File tổng quan bạn đang đọc.
+```

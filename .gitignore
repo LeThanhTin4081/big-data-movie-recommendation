@@ -5,6 +5,10 @@ data/
 *.json
 *.parquet
 
+# Environment variables
+.env
+*.env
+
 # Ignore Python cache
 __pycache__/
 *.py[cod]
