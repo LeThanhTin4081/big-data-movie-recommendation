@@ -50,5 +50,16 @@
 *   **TV 3 & TV 4:** Thuyết trình nháp từ đầu đến cuối canh thời gian. Test thử Web Demo đảm bảo mọi thứ trơn tru. Xuất file PDF để nộp.
 
 ---
+
+## 🚦 Sơ Đồ Phụ Thuộc Công Việc (Dependencies)
+Để tránh việc chia việc bị trùng hoặc có người ngồi chơi do phải chờ đợi, nhóm cần lưu ý 3 điểm sau:
+
+1. **Khâu đẩy dữ liệu (Ngày 4-5):** **TV2** (MongoDB) BẮT BUỘC PHẢI CHỜ **TV1** (Spark) huấn luyện xong mô hình ALS để lấy file kết quả cuối cùng. 
+   *(Mẹo để TV2 không bị ngồi chơi: TV1 hãy xuất ra trước 10 dòng kết quả mẫu đưa cho TV2 code chức năng kết nối trước!)*
+2. **Khâu hình ảnh minh chứng (Ngày 3-5):** **TV4** (Slide) BẮT BUỘC PHẢI CHỜ TV1 và TV2 chạy ra kết quả thì mới có hình màn hình máy tính để chụp. 
+   *(Mẹo: TV4 cứ thiết kế sẵn các khung slide và vẽ biểu đồ giả định trước, khi có ảnh thật chỉ việc kéo thả đè vào là xong).*
+3. **Khâu code song song (Không sợ trùng):** TV1 làm Spark và TV2 làm Web/NoSQL là 2 mảng hoàn toàn TÁCH BIỆT nhau. Hai bạn cứ code song song thoải mái vào các file riêng biệt, sau đó cùng gõ lệnh `git push` đẩy lên GitHub cũng sẽ không bao giờ sợ bị "đè" hay xóa nhầm code của người kia.
+
+---
 > [!TIP]
 > **Lời khuyên cho 2 bạn việc nhẹ (TV 3 & 4):** Dù không code chính, hai bạn phải là người "thuộc làu làu" kịch bản tại sao lại dùng Spark và MongoDB (như trong Slide Presentation đã vạch ra). Nếu bị thầy cô "xoáy" hỏi xoáy đáp xoay, hai bạn đứng ra đỡ đạn phần lý thuyết sẽ giúp nhóm lấy trọn vẹn điểm cộng làm việc nhóm!

@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  # Môi trường Spark & Python hoàn chỉnh
+  spark-env:
+    image: jupyter/pyspark-notebook:spark-3.5.0
+    container_name: movie_spark_env
+    ports:
+      - "8888:8888" # Cổng cho giao diện Jupyter Lab để viết code
+      - "4040:4040" # Cổng theo dõi tiến trình Spark UI
+    volumes:
+      # Ánh xạ toàn bộ thư mục code hiện tại vào trong Docker
+      - .:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    command: start-notebook.sh --NotebookApp.token='' # Tắt pass để vào thẳng cho tiện
