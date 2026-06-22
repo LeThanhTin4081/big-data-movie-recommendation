@@ -26,7 +26,7 @@
 *   **TV 3:** Code khung giao diện Web Next.js (có ô nhập User ID và nút Gợi ý). Viết test bằng Playwright.
 *   **TV 4:** Cập nhật số liệu EDA từ TV1 vào Báo cáo/Slide. Tìm kiếm hình ảnh minh họa kiến trúc đưa vào báo cáo.
 
-### Ngày 4: Train Mô hình (ML) và Tích hợp NoSQL
+### Ngày 4: Train Mô hình (ML) và Tích hợp MongoDB
 *   **TV 1 & TV 2:** Chạy huấn luyện thuật toán ALS. Tối ưu tham số để ra chỉ số RMSE tốt nhất.
 *   **TV 3:** Code phần kết nối Spark với MongoDB (viết hàm Batch Insert đẩy kết quả lên DB).
 *   **TV 4:** Đưa chỉ số RMSE vào **Chương 4** (Phần đánh giá). Chèn RMSE vào Slide. Rà soát chuẩn hóa font chữ báo cáo.
@@ -48,4 +48,4 @@
 ## 🚦 Sơ Đồ Phụ Thuộc Công Việc (Dependencies)
 1. **Khâu đẩy dữ liệu (Ngày 4-5):** **TV 3** (MongoDB) cần đợi **TV 2** (ML) ra file data chuẩn để đẩy. Tuy nhiên TV 3 có thể tạo schema mẫu đẩy thử trước.
 2. **Khâu hình ảnh minh chứng:** **TV 4** (Docs/Slide) bắt buộc phải theo sát tiến độ code của TV 1, 2, 3 để lấy số liệu thực tế. Công việc của TV 4 hoàn toàn linh động theo thời gian cá nhân.
-3. **Làm việc độc lập:** Các TV 1, 2, 3 code trên các module tách biệt (`etl`, `ml`, `web/nosql`) nên không sợ đụng code (conflict) khi dùng Git.
+3. **Làm việc độc lập:** Các TV 1, 2, 3 code trên các module tách biệt (`etl`, `ml`, `web/mongodb`) nên không sợ đụng code (conflict) khi dùng Git.

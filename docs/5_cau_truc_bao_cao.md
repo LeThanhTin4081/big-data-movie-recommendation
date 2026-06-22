@@ -15,11 +15,11 @@
 ### CHƯƠNG 1: TỔNG QUAN VỀ HỆ THỐNG GỢI Ý VÀ THÁCH THỨC DỮ LIỆU LỚN
 **1.1.** Bối cảnh bài toán cá nhân hóa trải nghiệm người dùng trong kỷ nguyên số.
 **1.2.** Hạn chế của kiến trúc cơ sở dữ liệu quan hệ (RDBMS) truyền thống khi xử lý dữ liệu quy mô lớn (Lecture 01).
-**1.3.** Đề xuất giải pháp kỹ thuật: Kết hợp mô hình tính toán In-Memory Apache Spark và cơ sở dữ liệu phi quan hệ NoSQL.
+**1.3.** Đề xuất giải pháp kỹ thuật: Kết hợp mô hình tính toán In-Memory Apache Spark và cơ sở dữ liệu phi quan hệ MongoDB.
 
 ### CHƯƠNG 2: CƠ SỞ LÝ THUYẾT VÀ KIẾN TRÚC HỆ THỐNG ĐỀ XUẤT
 **2.1.** Kiến trúc phân tán của Apache Spark (Luồng làm việc giữa Driver Program, Cluster Manager và Worker Nodes - Lecture 04).
-**2.2.** Cơ chế lưu trữ phi quan hệ hướng tài liệu (NoSQL Document Store) phục vụ lớp tối ưu truy vấn Serving Layer (Lecture 05).
+**2.2.** Cơ chế lưu trữ phi quan hệ hướng tài liệu (MongoDB Document Store) phục vụ lớp tối ưu truy vấn Serving Layer (Lecture 05).
 **2.3.** Nguyên lý thuật toán Lọc cộng tác (Collaborative Filtering) và phương pháp tối ưu hóa phân rã ma trận ALS (Alternating Least Squares).
 
 ### CHƯƠNG 3: TRIỂN KHAI PIPELINE ETL VÀ PHÂN TÍCH KHAI PHÁ DỮ LIỆU THẬT
@@ -30,4 +30,4 @@
 ### CHƯƠNG 4: THỬ NGHIỆM ĐÁNH GIÁ MÔ HÌNH VÀ TRIỂN KHAI ỨNG DỤNG DEMO
 **4.1.** Quy trình huấn luyện mô hình học máy song song và các tham số tinh chỉnh tránh Overfitting trên cụm.
 **4.2.** Đánh giá độ chính xác của hệ thống dựa trên chỉ số sai số RMSE.
-**4.3.** Thiết kế giao diện ứng dụng Web tương tác độ trễ thấp thông qua việc đồng bộ dữ liệu sang lớp NoSQL Serving Layer.
+**4.3.** Thiết kế giao diện ứng dụng Web tương tác độ trễ thấp thông qua việc đồng bộ dữ liệu sang lớp MongoDB Serving Layer.
