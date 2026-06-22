@@ -18,3 +18,16 @@ __pycache__/
 .vscode/
 .idea/
 .DS_Store
+
+# Node.js & Next.js
+node_modules/
+.next/
+out/
+build/
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
