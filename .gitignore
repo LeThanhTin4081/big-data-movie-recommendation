@@ -1,4 +1,4 @@
-# Ignore data files to save GitHub storage
+# Ignore data files
 data/
 *.zip
 *.csv
@@ -9,12 +9,24 @@ data/
 .env
 *.env
 
-# Ignore Python cache
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
 
-# IDE and OS specific
+# Node.js
+node_modules/
+frontend/node_modules/
+
+# Next.js
+.next/
+frontend/.next/
+
+# Build
+dist/
+build/
+
+# IDE and OS
 .vscode/
 .idea/
 .DS_Store
