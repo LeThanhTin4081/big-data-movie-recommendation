@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ScrollProgress from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
-  title: "Big Data Movie Recommendation",
-  description: "Web Demo cho hệ thống gợi ý phim",
+  title: "T3V Play - Hệ thống Gợi ý Phim | Big Data Apache Spark",
+  description:
+    "Hệ thống gợi ý phim quy mô lớn sử dụng Apache Spark, ALS Collaborative Filtering và MongoDB Atlas",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="vi">
       <body className="antialiased">
-        {children}
-      </body>
-    </html>
-  );
+        <ScrollProgress />
+            {children}
+          </body>
+        </html>
+        );
 }
