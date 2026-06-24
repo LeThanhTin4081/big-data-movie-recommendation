@@ -1,6 +1,6 @@
 # 🍿 Hệ Thống Gợi Ý Phim Quy Mô Lớn (Big Data)
 
-Chào mừng đến với kho lưu trữ (Repository) mã nguồn mở của dự án **Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn**. Dự án áp dụng kiến trúc chuẩn của Dữ liệu lớn (Big Data) bao gồm **Apache Spark** (Xử lý phân tán) và **MongoDB** (Lớp lưu trữ NoSQL tốc độ cao).
+Chào mừng đến với kho lưu trữ (Repository) mã nguồn mở của dự án **Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn**. Dự án áp dụng kiến trúc chuẩn của Dữ liệu lớn (Big Data) bao gồm **Apache Spark** (Xử lý phân tán) và **MongoDB** (Lớp lưu trữ MongoDB tốc độ cao).
 
 
 ## 🚀 Kiến trúc Hệ thống
@@ -60,12 +60,13 @@ bigdata_project/
 │   ├── 4_tong_quan_de_tai.md
 │   ├── 5_cau_truc_bao_cao.md
 │   └── 6_cau_truc_slide.md
-├── src/                # Mã nguồn chính của dự án (Source code)
+├── frontend/           # Mã nguồn giao diện Web Demo (Next.js, Tailwind CSS)
+├── src/                # Mã nguồn chính của luồng Big Data (Source code)
 │   ├── etl/            # Chứa script nạp dữ liệu và làm sạch bằng Spark SQL.
 │   ├── ml/             # Chứa script huấn luyện thuật toán ALS phân tán (Spark MLlib).
-│   ├── nosql/          # Chứa script đồng bộ kết quả ma trận từ Spark sang MongoDB.
-│   └── web/            # Chứa mã nguồn giao diện Web tương tác trực tiếp NoSQL.
+│   └── nosql/          # Chứa script đồng bộ kết quả ma trận từ Spark sang MongoDB.
 ├── .env.example        # File mẫu chứa cấu hình biến môi trường (Ví dụ: Link kết nối DB).
+├── docker-compose.yml  # File cấu hình Docker để chạy môi trường Spark và Web.
 ├── .gitignore          # File cấu hình Git để ẩn các file không cần thiết (cache, log, data).
 └── README.md           # File tổng quan bạn đang đọc.
 ```

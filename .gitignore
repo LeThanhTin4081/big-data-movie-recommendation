@@ -14,6 +14,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Jupyter Notebook
+.ipynb_checkpoints/
+
 # Node.js
 node_modules/
 frontend/node_modules/

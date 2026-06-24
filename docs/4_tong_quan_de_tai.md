@@ -1,7 +1,7 @@
 # Tài liệu Đề tài: Hệ thống Gợi ý Phim Quy mô lớn (Big Data)
 
 ## 1. Tên đề tài
-**Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn dựa trên Kiến trúc Tính toán Phân tán Apache Spark và Lớp Lưu trữ NoSQL**
+**Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn dựa trên Kiến trúc Tính toán Phân tán Apache Spark và Lớp Lưu trữ MongoDB**
 
 ## 2. Bài toán thực tế
 Dự án sử dụng **dữ liệu thật (MovieLens Dataset)** với hàng trăm nghìn đến hàng triệu lượt đánh giá phim thực tế từ người dùng, giải quyết bài toán xử lý khối lượng dữ liệu khổng lồ mà các hệ thống cơ sở dữ liệu truyền thống (RDBMS) khó đáp ứng được về mặt hiệu năng.
@@ -17,13 +17,13 @@ Dự án sử dụng **dữ liệu thật (MovieLens Dataset)** với hàng tră
   2. **Huấn luyện mô hình:** Chạy thuật toán học máy **ALS (Alternating Least Squares)** trên tập dữ liệu đánh giá khổng lồ.
   3. **Tính toán trước (Pre-computation):** Thuật toán tính toán ma trận và sinh ra danh sách 5 bộ phim gợi ý phù hợp nhất cho **từng** người dùng.
 
-### Luồng 2: Phục vụ trực tuyến (Online Serving - Web & NoSQL)
+### Luồng 2: Phục vụ trực tuyến (Online Serving - Web & MongoDB)
 Đây là môi trường "trưng bày", yêu cầu tốc độ phản hồi tính bằng mili-giây.
-- **Công cụ:** Cơ sở dữ liệu NoSQL (MongoDB) và Giao diện Web (Gradio / Streamlit).
+- **Công cụ:** Cơ sở dữ liệu MongoDB (MongoDB) và Giao diện Web (Next.js / Node.js).
 - **Quy trình:**
   1. **Lưu trữ kết quả:** Toàn bộ kết quả (danh sách phim đã gợi ý cho từng người dùng) từ cụm Spark được đổ thẳng vào MongoDB. MongoDB lưu trữ dưới dạng Document (JSON) giúp việc truy xuất cực kỳ tối ưu.
   2. **Giao diện Web:** Web app kết nối **trực tiếp và duy nhất** với MongoDB. Khi người dùng nhập `User ID`, Web chỉ thực hiện một truy vấn đọc đơn giản trên MongoDB.
-  3. **Tốc độ:** Nhờ việc dữ liệu đã được tính sẵn và ưu thế đọc nhanh của NoSQL, hệ thống chỉ mất **chưa tới 0.1 giây** để hiển thị kết quả.
+  3. **Tốc độ:** Nhờ việc dữ liệu đã được tính sẵn và ưu thế đọc nhanh của MongoDB, hệ thống chỉ mất **chưa tới 0.1 giây** để hiển thị kết quả.
 
 ## 4. Ưu điểm nổi bật của Kiến trúc (Luận điểm bảo vệ đề tài)
 
@@ -31,7 +31,7 @@ Dự án sử dụng **dữ liệu thật (MovieLens Dataset)** với hàng tră
 > Đây là những điểm mấu chốt cần nhấn mạnh khi thuyết trình để đạt điểm tối đa.
 
 1. **Tránh nghẽn hệ thống (No Bottlenecks):** 
-   Spark tính toán ma trận lớn rất nặng và mất thời gian. Nếu cho Web truy vấn trực tiếp vào Spark, mỗi khi nhập User ID hệ thống sẽ bị treo. Việc tách biệt việc tính toán (Spark) và truy vấn phục vụ (NoSQL) là **kiến trúc chuẩn công nghiệp (Industry Standard)** được dùng tại các công ty lớn như Netflix, Shopee.
+   Spark tính toán ma trận lớn rất nặng và mất thời gian. Nếu cho Web truy vấn trực tiếp vào Spark, mỗi khi nhập User ID hệ thống sẽ bị treo. Việc tách biệt việc tính toán (Spark) và truy vấn phục vụ (MongoDB) là **kiến trúc chuẩn công nghiệp (Industry Standard)** được dùng tại các công ty lớn như Netflix, Shopee.
 
 2. **Sử dụng đúng công nghệ cho đúng mục đích:**
    - **Apache Spark:** Tối ưu cho tính toán phân tán, xử lý khối lượng dữ liệu khổng lồ (Heavy computation).

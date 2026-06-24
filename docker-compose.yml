@@ -14,3 +14,14 @@ services:
     environment:
       - JUPYTER_ENABLE_LAB=yes
     command: start-notebook.sh --NotebookApp.token='' # Tắt pass để vào thẳng cho tiện
+
+  # Môi trường chạy Next.js Frontend
+  frontend:
+    image: node:20
+    container_name: movie_frontend
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    command: sh -c "npm install && npm run dev"
