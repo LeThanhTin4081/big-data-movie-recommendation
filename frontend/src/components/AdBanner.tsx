@@ -1,431 +1,307 @@
 "use client";
 
 // ==============================================================================
-// AD BANNER - QUẢNG CÁO LIÊN QUAN ĐẾN PHIM
-// Kiểu FPT Play: quảng cáo gói xem phim, phim mới, ưu đãi
-// Có ticker phim chạy ngang phía dưới
+// AD BANNER — LPBANK VISA — COMPACT 145px VERSION
 // ==============================================================================
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
+import {
+  CreditCard, Gift, Ticket, Globe, Lock, Smartphone, Trophy, Star, Tv, ChevronRight,
+} from "lucide-react";
 
-// ------------------------------------------------------------------------------
-// Dữ liệu các phim đang quảng cáo / nổi bật
-// ------------------------------------------------------------------------------
-const AD_MOVIES = [
+// ---------- Types ----------
+interface Slide {
+  id: number;
+  accentFrom: string;
+  accentTo: string;
+  tagline: string;
+  headline: string;
+  headlineAccent: string;
+  subtext: string;
+  bigNumber: string;
+  bigLabel: string;
+  badges: { icon: string; text: string }[];
+  ctaText: string;
+  cardLabels: string[];
+}
+
+// ---------- Data ----------
+const SLIDES: Slide[] = [
+  {
+    id: 0,
+    accentFrom: "#FFD700",
+    accentTo: "#FF8C00",
+    tagline: "Ưu đãi thẻ tín dụng quốc tế LPBank",
+    headline: "Chi tiêu thả ga",
+    headlineAccent: "Hoàn tiền tối đa",
+    subtext: "Áp dụng với thẻ tín dụng quốc tế LPBank Visa",
+    bigNumber: "5",
+    bigLabel: "triệu đồng",
+    badges: [
+      { icon: "creditcard", text: "Hoàn 2,5 Triệu" },
+      { icon: "gift", text: "Hoàn 1,2 Triệu" },
+      { icon: "ticket", text: "Hoàn 500K" },
+    ],
+    ctaText: "Đăng ký ngay",
+    cardLabels: ["LPBank Platinum", "LPBank Signature", "LPBank Gold"],
+  },
   {
     id: 1,
-    poster: "https://image.tmdb.org/t/p/w92/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-    title: "The Shawshank Redemption",
-    year: "1994",
-    badge: "MỚI",
-    badgeColor: "#f97316",
+    accentFrom: "#FFC700",
+    accentTo: "#E6A800",
+    tagline: "Đại tiệc siêu hời cùng LPBank Visa",
+    headline: "Thanh toán muôn nơi",
+    headlineAccent: "Hoàn tiền siêu hời",
+    subtext: "Ưu đãi tại Shopee, Be, Uniqlo và hơn 1000 đối tác",
+    bigNumber: "45%",
+    bigLabel: "hoàn tiền",
+    badges: [
+      { icon: "globe", text: "Du lịch" },
+      { icon: "star", text: "Tiện ích" },
+      { icon: "tv", text: "Mua sắm" },
+    ],
+    ctaText: "Khám phá ngay",
+    cardLabels: ["Visa Cashback", "Visa Voucher", "Visa Premium"],
   },
   {
     id: 2,
-    poster: "https://image.tmdb.org/t/p/w92/3bhkrj58Vtu7enYsLcdn3yDjhW8.jpg",
-    title: "The Godfather",
-    year: "1972",
-    badge: "4K",
-    badgeColor: "#a855f7",
-  },
-  {
-    id: 3,
-    poster: "https://image.tmdb.org/t/p/w92/sF1U4EUQS8YHUYjNl3pMGNIQyr0.jpg",
-    title: "Schindler's List",
-    year: "1993",
-    badge: "HD",
-    badgeColor: "#3b82f6",
+    accentFrom: "#FFD000",
+    accentTo: "#FFB300",
+    tagline: "Mở thẻ online — Nhận ngay ưu đãi",
+    headline: "Thẻ quyền năng",
+    headlineAccent: "Quà tặng bất tận",
+    subtext: "Thẻ Visa LPBank — Trải nghiệm đỉnh cao",
+    bigNumber: "0đ",
+    bigLabel: "phí thường niên",
+    badges: [
+      { icon: "smartphone", text: "1 Phút mở thẻ" },
+      { icon: "lock", text: "Bảo mật cao" },
+      { icon: "trophy", text: "Đặc quyền VIP" },
+    ],
+    ctaText: "Mở thẻ ngay",
+    cardLabels: ["Debit Card", "Credit Card", "Premium Card"],
   },
 ];
 
-// ------------------------------------------------------------------------------
-// Các tin tức / phim chạy trong ticker
-// ------------------------------------------------------------------------------
-const TICKER_ITEMS = [
-  { text: "Star Wars (1977) - Phim được đánh giá cao nhất - 4.4/5 sao", color: "#f97316" },
-  { text: "The Shawshank Redemption - Tuyệt phẩm điện ảnh - 4.5/5 sao", color: "#facc15" },
-  { text: "The Godfather (1972) - Bố già huyền thoại - 4.3/5 sao", color: "#a855f7" },
-  { text: "Pulp Fiction (1994) - Kinh điển Quentin Tarantino - 4.2/5 sao", color: "#ec4899" },
-  { text: "Schindler's List - Oscar phim hay nhất - 4.5/5 sao", color: "#22c55e" },
-  { text: "Fargo (1996) - Giải thưởng Emmy - 4.2/5 sao", color: "#3b82f6" },
-  { text: "The Silence of the Lambs - Kinh dị tâm lý đỉnh cao - 4.3/5 sao", color: "#ef4444" },
-  { text: "Forrest Gump (1994) - Câu chuyện cảm động - 4.0/5 sao", color: "#f97316" },
-  { text: "Toy Story (1995) - Hoạt hình Pixar kinh điển - 3.9/5 sao", color: "#06b6d4" },
-  { text: "Raiders of the Lost Ark - Cuộc phiêu lưu Indiana Jones - 4.3/5 sao", color: "#facc15" },
-];
+// ---------- Icon helper ----------
+function Ico({ name, size = 14 }: { name: string; size?: number }) {
+  const p = { size, strokeWidth: 2.2 };
+  switch (name) {
+    case "creditcard": return <CreditCard {...p} />;
+    case "gift": return <Gift {...p} />;
+    case "ticket": return <Ticket {...p} />;
+    case "globe": return <Globe {...p} />;
+    case "lock": return <Lock {...p} />;
+    case "smartphone": return <Smartphone {...p} />;
+    case "trophy": return <Trophy {...p} />;
+    case "star": return <Star {...p} />;
+    case "tv": return <Tv {...p} />;
+    default: return null;
+  }
+}
 
-// ------------------------------------------------------------------------------
-// Component mini poster phim
-// ------------------------------------------------------------------------------
-function MoviePoster({
-  movie,
-}: {
-  movie: (typeof AD_MOVIES)[0];
+// ---------- Mini Visa Card ----------
+function MiniCard({ label, accent, rotate, lift, isCenter }: {
+  label: string; accent: string; rotate: number; lift: number; isCenter?: boolean;
 }) {
-  const [imgErr, setImgErr] = useState(false);
-
   return (
-    <div className="relative flex-shrink-0 group">
-      <div className="relative w-10 h-14 rounded overflow-hidden">
-        {!imgErr ? (
-          <Image
-            src={movie.poster}
-            alt={movie.title}
-            fill
-            className="object-cover group-hover:scale-110 transition-transform duration-300"
-            onError={() => setImgErr(true)}
-            sizes="40px"
-          />
-        ) : (
-          <div className="absolute inset-0 bg-gray-800 flex items-center justify-center">
-            <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M7 4v16M17 4v16" />
-            </svg>
+    <div
+      className="flex-shrink-0 transition-all duration-500"
+      style={{
+        width: 110, height: 68,
+        transform: `rotate(${rotate}deg) translateY(${lift}px) scale(${isCenter ? 1.06 : 1})`,
+        marginLeft: rotate === 0 ? -20 : rotate > 0 ? -20 : 0,
+        zIndex: isCenter ? 10 : 5,
+        filter: isCenter
+          ? `drop-shadow(0 4px 14px ${accent}55)`
+          : "drop-shadow(0 2px 8px rgba(0,0,0,0.5))",
+      }}
+    >
+      <div
+        className="w-full h-full rounded-lg p-2 flex flex-col justify-between relative overflow-hidden"
+        style={{
+          background: isCenter
+            ? "linear-gradient(135deg, #1a1505 0%, #0d0d0d 50%, #1a1505 100%)"
+            : "linear-gradient(135deg, #111 0%, #1a1a1a 100%)",
+          border: `1px solid ${isCenter ? accent : "rgba(255,255,255,0.1)"}`,
+        }}
+      >
+        {/* decorative rings */}
+        <svg className="absolute right-[-8px] top-[-8px] w-[50px] h-[50px] pointer-events-none" style={{ opacity: 0.12 }}>
+          <circle cx="25" cy="25" r="12" stroke={accent} strokeWidth="0.8" fill="none" />
+          <circle cx="25" cy="25" r="18" stroke={accent} strokeWidth="0.5" fill="none" />
+          <circle cx="25" cy="25" r="24" stroke={accent} strokeWidth="0.3" fill="none" />
+        </svg>
+
+        {/* top: bank name + label */}
+        <div className="flex items-start justify-between z-10">
+          <div>
+            <div className="text-[7px] font-black text-white tracking-tight leading-none">
+              LPBank<span className="inline-block w-[3px] h-[3px] rounded-full ml-[2px] align-middle" style={{ background: accent }} />
+            </div>
+            <div className="text-[4.5px] text-white/35 tracking-wider uppercase mt-[2px]">{label}</div>
           </div>
-        )}
-        {/* Badge góc trên */}
-        <div
-          className="absolute top-0.5 left-0.5 px-1 py-px rounded text-[9px] font-black text-white leading-none shadow"
-          style={{ background: movie.badgeColor }}
-        >
-          {movie.badge}
+          {/* contactless icon thay cho chip vàng */}
+          <svg className="w-[10px] h-[10px] text-white/30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+            <path d="M8.5 16.5a5 5 0 010-9" />
+            <path d="M12 19a9 9 0 010-14" />
+            <path d="M15.5 21.5a13 13 0 010-19" />
+          </svg>
+        </div>
+
+        {/* bottom: number + VISA */}
+        <div className="flex items-end justify-between z-10">
+          <div className="text-[6px] font-mono text-white/50 tracking-[0.15em]">•••• 9999</div>
+          <div className="text-[8px] font-black tracking-tight text-white/60">VISA</div>
         </div>
       </div>
     </div>
   );
 }
 
-// ------------------------------------------------------------------------------
-// Component chính AdBanner
-// ------------------------------------------------------------------------------
+// ==============================================================================
+// MAIN COMPONENT
+// ==============================================================================
 export default function AdBanner() {
-  const [isVisible, setIsVisible] = useState(true);
-  const [currentAd, setCurrentAd] = useState(0);
+  const [visible, setVisible] = useState(true);
+  const [idx, setIdx] = useState(0);
+  const [fade, setFade] = useState(false);
 
-  // Chuyển qua lại giữa các quảng cáo
+  const goTo = useCallback((i: number) => {
+    if (i === idx || fade) return;
+    setFade(true);
+    setTimeout(() => { setIdx(i); setFade(false); }, 300);
+  }, [idx, fade]);
+
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentAd((prev) => (prev + 1) % 3);
-    }, 4000);
-    return () => clearInterval(timer);
+    const t = setInterval(() => {
+      setFade(true);
+      setTimeout(() => {
+        setIdx(p => (p + 1) % SLIDES.length);
+        setFade(false);
+      }, 300);
+    }, 6000);
+    return () => clearInterval(t);
   }, []);
 
-  // Nội dung các quảng cáo xoay vòng
-  const ADS = [
-    {
-      label: "PHIM HOT",
-      labelColor: "#f97316",
-      title: "XEM PHIM KHÔNG GIỚI HẠN",
-      titleColor: "linear-gradient(90deg, #ffffff 0%, #fbbf24 100%)",
-      subtitle: "1,682 bộ phim kinh điển - Cập nhật mỗi ngày",
-      highlightText: "MIỄN PHÍ",
-      highlightColor: "#f97316",
-    },
-    {
-      label: "ƯU ĐÃI",
-      labelColor: "#22c55e",
-      title: "GÓI PRO GIẢM 30%",
-      titleColor: "linear-gradient(90deg, #4ade80 0%, #ffffff 100%)",
-      subtitle: "Xem phim chất lượng 4K - Không quảng cáo",
-      highlightText: "CÓ HẠN",
-      highlightColor: "#22c55e",
-    },
-    {
-      label: "MỚI RA MẮT",
-      labelColor: "#a855f7",
-      title: "PHIM MỚI TUẦN NÀY",
-      titleColor: "linear-gradient(90deg, #c084fc 0%, #ffffff 100%)",
-      subtitle: "The Godfather, Star Wars, Pulp Fiction và nhiều hơn",
-      highlightText: "XEM NGAY",
-      highlightColor: "#a855f7",
-    },
-  ];
-
-  const ad = ADS[currentAd];
-
-  if (!isVisible) return null;
+  if (!visible) return null;
+  const s = SLIDES[idx];
 
   return (
-    <div className="relative w-full z-40 overflow-hidden" style={{ background: "#0a0f1a" }}>
-      {/* -------------------------------------------------------------------- */}
-      {/* BANNER CHÍNH */}
-      {/* -------------------------------------------------------------------- */}
+    <div className="w-full select-none relative overflow-hidden" style={{ height: 145 }}>
+
+      {/* ─── BG gradient ─── */}
       <div
-        className="relative overflow-hidden"
-        style={{
-          background:
-            "linear-gradient(135deg, #05111f 0%, #0a1a35 35%, #0d2040 60%, #071018 100%)",
-          minHeight: "88px",
-          borderBottom: "1px solid rgba(255,255,255,0.05)",
-        }}
-      >
-        {/* Hiệu ứng ánh sáng nền động */}
+        className="absolute inset-0 transition-all duration-600"
+        style={{ background: `linear-gradient(100deg, #0c0c14 0%, #0c0c14 40%, ${s.accentFrom}08 70%, ${s.accentFrom}12 100%)` }}
+      />
+      {/* radial glow behind big number */}
+      <div
+        className="absolute right-[15%] top-1/2 -translate-y-1/2 w-[260px] h-[200px] rounded-full pointer-events-none transition-all duration-600"
+        style={{ background: `radial-gradient(ellipse, ${s.accentFrom}12 0%, transparent 70%)` }}
+      />
+
+      {/* ─── TOP BAR ─── */}
+      <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-[3px]">
+        <div className="flex items-center gap-1.5">
+          <span className="w-[5px] h-[5px] rounded-full animate-pulse" style={{ background: s.accentFrom }} />
+          <span className="text-[9px] font-semibold uppercase tracking-[2px] text-white/35">Quảng cáo tài trợ</span>
+        </div>
+        <button onClick={() => setVisible(false)} aria-label="Đóng" className="text-white/25 hover:text-white transition-colors p-0.5">
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      {/* ─── CONTENT ROW ─── */}
+      <div className="relative z-20 h-full flex items-center justify-center gap-8 lg:gap-16 w-full max-w-6xl mx-auto pt-5 pb-4 px-4">
+
+        {/* ── LEFT COLUMN: Text ── */}
         <div
-          className="absolute inset-0 pointer-events-none transition-all duration-1000"
-          style={{
-            background:
-              currentAd === 0
-                ? "radial-gradient(ellipse at 15% 50%, rgba(249,115,22,0.10) 0%, transparent 55%)"
-                : currentAd === 1
-                ? "radial-gradient(ellipse at 15% 50%, rgba(34,197,94,0.10) 0%, transparent 55%)"
-                : "radial-gradient(ellipse at 15% 50%, rgba(168,85,247,0.10) 0%, transparent 55%)",
-          }}
-        />
-
-        {/* Đường kẻ màu sắc trên */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px] transition-all duration-700"
-          style={{
-            background:
-              currentAd === 0
-                ? "linear-gradient(90deg, transparent 0%, #f97316 40%, #facc15 60%, transparent 100%)"
-                : currentAd === 1
-                ? "linear-gradient(90deg, transparent 0%, #22c55e 40%, #06b6d4 60%, transparent 100%)"
-                : "linear-gradient(90deg, transparent 0%, #a855f7 40%, #ec4899 60%, transparent 100%)",
-          }}
-        />
-
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-14 h-full">
-          <div className="flex items-center h-[88px] gap-4 sm:gap-6">
-
-            {/* ---------------------------------------------------------------- */}
-            {/* PHẦN 1: NHÃN QUẢNG CÁO + LOGO */}
-            {/* ---------------------------------------------------------------- */}
-            <div className="flex items-center gap-3 flex-shrink-0">
-              {/* Nhãn "QUẢNG CÁO" nhỏ */}
-              <div className="hidden sm:flex flex-col items-center gap-1">
-                <span className="text-gray-600 text-[9px] uppercase tracking-widest">
-                  Quảng cáo
-                </span>
-                {/* Mini logo */}
-                <div
-                  className="w-9 h-9 rounded-lg flex items-center justify-center font-black text-white text-xs transition-all duration-500"
-                  style={{
-                    background: ad.labelColor,
-                    boxShadow: `0 0 14px ${ad.labelColor}60`,
-                  }}
-                >
-                  T3V
-                </div>
-              </div>
-
-              {/* Đường ngăn dọc */}
-              <div className="hidden sm:block w-px h-12 bg-white/8" />
+          className="flex-shrink-0 flex flex-col justify-center gap-2 transition-all duration-300 w-[340px] md:w-[400px]"
+          style={{ opacity: fade ? 0 : 1, transform: fade ? "translateX(-6px)" : "translateX(0)" }}
+        >
+          {/* brand pill & tagline */}
+          <div className="flex items-center gap-3 mb-1">
+            <div className="inline-flex items-center gap-1.5 px-2 py-[2px] rounded-full" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <span className="text-[9px] font-black text-white/80 tracking-tight">VISA</span>
+              <span className="w-px h-2 bg-white/15" />
+              <span className="text-[9px] font-black text-white/80 tracking-tight">LPBank<span className="inline-block w-1 h-1 rounded-full ml-[2px] align-middle" style={{ background: s.accentFrom }} /></span>
             </div>
-
-            {/* ---------------------------------------------------------------- */}
-            {/* PHẦN 2: NỘI DUNG CHÍNH */}
-            {/* ---------------------------------------------------------------- */}
-            <div className="flex-1 flex items-center gap-5 overflow-hidden min-w-0">
-
-              {/* Tiêu đề và mô tả */}
-              <div className="min-w-0 flex-shrink-0">
-                {/* Label nhỏ bên trên */}
-                <div
-                  className="text-[10px] font-black uppercase tracking-[3px] mb-0.5 transition-colors duration-500"
-                  style={{ color: ad.labelColor }}
-                >
-                  {ad.label}
-                </div>
-
-                {/* Tiêu đề lớn - gradient */}
-                <div
-                  className="text-xl sm:text-2xl font-black leading-none mb-1 transition-all duration-500"
-                  style={{
-                    background: ad.titleColor,
-                    WebkitBackgroundClip: "text",
-                    WebkitTextFillColor: "transparent",
-                    backgroundClip: "text",
-                  }}
-                >
-                  {ad.title}
-                </div>
-
-                {/* Mô tả nhỏ */}
-                <div className="text-gray-400 text-xs hidden sm:block">
-                  {ad.subtitle}
-                </div>
-              </div>
-
-              {/* Đường ngăn */}
-              <div className="hidden md:block w-px h-14 bg-white/8 flex-shrink-0" />
-
-              {/* ---------------------------------------------------------------- */}
-              {/* PHẦN 3: MINI POSTER CÁC PHIM */}
-              {/* ---------------------------------------------------------------- */}
-              <div className="hidden md:flex items-center gap-2 flex-shrink-0">
-                {AD_MOVIES.map((m) => (
-                  <MoviePoster key={m.id} movie={m} />
-                ))}
-                {/* Text số lượng phim */}
-                <div className="flex flex-col items-center ml-1">
-                  <span className="text-white font-black text-lg leading-none">
-                    1,682
-                  </span>
-                  <span className="text-gray-500 text-[10px] leading-tight">
-                    bộ phim
-                  </span>
-                </div>
-              </div>
-
-              {/* Đường ngăn */}
-              <div className="hidden lg:block w-px h-14 bg-white/8 flex-shrink-0" />
-
-              {/* ---------------------------------------------------------------- */}
-              {/* PHẦN 4: CÁC TÍNH NĂNG NỔI BẬT */}
-              {/* ---------------------------------------------------------------- */}
-              <div className="hidden lg:flex items-center gap-3 flex-shrink-0">
-                {[
-                  { icon: "★", label: "4.5/5", sub: "Đánh giá TB" },
-                  { icon: "▶", label: "FULL HD", sub: "Chất lượng cao" },
-                  { icon: "⚡", label: "Nhanh", sub: "Không buffer" },
-                ].map((item) => (
-                  <div
-                    key={item.label}
-                    className="flex flex-col items-center px-3 py-2 rounded-xl"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.07)",
-                    }}
-                  >
-                    <div className="flex items-center gap-1">
-                      <span className="text-xs" style={{ color: ad.labelColor }}>
-                        {item.icon}
-                      </span>
-                      <span className="text-white text-xs font-black">
-                        {item.label}
-                      </span>
-                    </div>
-                    <span className="text-gray-500 text-[10px] mt-0.5">
-                      {item.sub}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* ---------------------------------------------------------------- */}
-            {/* PHẦN 5: NÚT HÀNH ĐỘNG + ĐÓNG */}
-            {/* ---------------------------------------------------------------- */}
-            <div className="flex items-center gap-2 flex-shrink-0 ml-auto">
-              {/* Highlight badge */}
-              <div
-                className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg flex-shrink-0 transition-all duration-500"
-                style={{
-                  background: `${ad.highlightColor}20`,
-                  border: `1px solid ${ad.highlightColor}40`,
-                }}
-              >
-                <div
-                  className="w-1.5 h-1.5 rounded-full animate-pulse"
-                  style={{ background: ad.highlightColor }}
-                />
-                <span
-                  className="text-xs font-black"
-                  style={{ color: ad.highlightColor }}
-                >
-                  {ad.highlightText}
-                </span>
-              </div>
-
-              {/* Nút CTA chính */}
-              <a
-                href="#recommend"
-                className="btn-glow text-white text-sm font-black px-5 py-2.5 rounded-lg transition-all duration-500 whitespace-nowrap flex-shrink-0"
-                style={{
-                  background: ad.labelColor,
-                  boxShadow: `0 0 16px ${ad.labelColor}50`,
-                }}
-              >
-                Xem ngay
-              </a>
-
-              {/* Nút đóng */}
-              <button
-                onClick={() => setIsVisible(false)}
-                className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-white hover:bg-white/10 rounded-lg transition-all flex-shrink-0"
-                aria-label="Đóng banner"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
+            <p className="text-[9px] font-bold uppercase tracking-[1.5px] leading-none" style={{ color: s.accentFrom }}>
+              {s.tagline}
+            </p>
           </div>
+
+          {/* headline */}
+          <div className="leading-none mb-1">
+            <div className="text-white font-black text-xl md:text-2xl lg:text-[28px] tracking-tight leading-[1.1]">{s.headline}</div>
+            <div className="font-black text-xl md:text-2xl lg:text-[28px] tracking-tight leading-[1.1]" style={{ color: s.accentFrom }}>{s.headlineAccent}</div>
+          </div>
+
+          {/* subtext */}
+          <p className="text-[11px] text-white/50 w-full truncate">{s.subtext}</p>
         </div>
 
-        {/* Các dot chỉ báo quảng cáo đang hiện */}
-        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {ADS.map((_, i) => (
+        {/* ── CENTER COLUMN: Badges + CTA ── */}
+        <div
+          className="hidden lg:flex flex-shrink-0 flex-col justify-center gap-3 transition-all duration-300 px-8 border-l border-white/10"
+          style={{ opacity: fade ? 0 : 1, transform: fade ? "scale(0.95)" : "scale(1)", minWidth: "160px" }}
+        >
+          <div className="flex flex-col gap-2">
+            {s.badges.map((b, i) => (
+              <div
+                key={i}
+                className="flex items-center gap-2 px-3 py-1 rounded-md w-max"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <span style={{ color: s.accentFrom }}><Ico name={b.icon} size={12} /></span>
+                <span className="text-[10px] text-white/70 font-semibold">{b.text}</span>
+              </div>
+            ))}
+          </div>
+
+          <a
+            href="#visa-lpbank"
+            className="inline-flex items-center justify-center gap-1.5 font-black text-[10px] px-4 py-2 rounded-full hover:brightness-110 transition-all hover:scale-[1.03] active:scale-[0.97] w-max mt-1"
+            style={{ background: `linear-gradient(135deg, ${s.accentFrom}, ${s.accentTo})`, color: "#000", boxShadow: `0 2px 10px ${s.accentFrom}30` }}
+          >
+            {s.ctaText}
+            <ChevronRight size={13} strokeWidth={3} />
+          </a>
+        </div>
+
+        {/* ── RIGHT: 3 Visa cards fan ── */}
+        <div
+          className="hidden md:flex flex-shrink-0 items-center justify-center transition-all duration-300 w-[240px]"
+          style={{ opacity: fade ? 0 : 1, transform: fade ? "translateX(8px)" : "translateX(0)" }}
+        >
+          <MiniCard label={s.cardLabels[0]} accent={s.accentFrom} rotate={-7} lift={3} />
+          <MiniCard label={s.cardLabels[1]} accent={s.accentFrom} rotate={0} lift={-4} isCenter />
+          <MiniCard label={s.cardLabels[2]} accent={s.accentFrom} rotate={7} lift={3} />
+        </div>
+
+      </div>
+
+      {/* ─── BOTTOM BAR: dots + info ─── */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-[3px]">
+        <div className="flex items-center gap-1">
+          {SLIDES.map((_, i) => (
             <button
               key={i}
-              onClick={() => setCurrentAd(i)}
+              onClick={() => goTo(i)}
+              aria-label={`Slide ${i + 1}`}
               className="rounded-full transition-all duration-300"
-              style={{
-                width: i === currentAd ? "16px" : "6px",
-                height: "6px",
-                background: i === currentAd ? ADS[i].labelColor : "rgba(255,255,255,0.2)",
-              }}
-              aria-label={`Chuyển đến quảng cáo ${i + 1}`}
+              style={{ width: i === idx ? 14 : 5, height: 4, background: i === idx ? s.accentFrom : "rgba(255,255,255,0.18)" }}
             />
           ))}
         </div>
+        <span className="text-[10px] text-white/25 tracking-wide">Từ 12/09/2026 — 12/12/2026</span>
       </div>
 
-      {/* -------------------------------------------------------------------- */}
-      {/* TICKER - PHIM CHẠY NGANG PHÍA DƯỚI */}
-      {/* -------------------------------------------------------------------- */}
-      <div
-        className="ticker-wrap py-1.5 overflow-hidden"
-        style={{
-          background: "rgba(0,0,0,0.4)",
-          borderBottom: "1px solid rgba(255,255,255,0.04)",
-        }}
-      >
-        {/* Label bên trái cố định */}
-        <div className="flex items-center">
-          <div
-            className="flex-shrink-0 flex items-center gap-2 px-4 border-r"
-            style={{ borderColor: "rgba(255,255,255,0.08)" }}
-          >
-            <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
-            <span className="text-red-400 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
-              PHIM HOT
-            </span>
-          </div>
-
-          {/* Nội dung ticker cuộn */}
-          <div className="flex-1 overflow-hidden">
-            <div className="ticker-inner animate-ticker inline-flex gap-12">
-              {/* Lặp 2 lần để cuộn vô tận */}
-              {[...Array(2)].map((_, repeatIdx) => (
-                <span
-                  key={repeatIdx}
-                  className="inline-flex items-center gap-12"
-                >
-                  {TICKER_ITEMS.map((item, i) => (
-                    <span
-                      key={i}
-                      className="inline-flex items-center gap-2 flex-shrink-0"
-                    >
-                      {/* Điểm phân cách */}
-                      <span
-                        className="w-1 h-1 rounded-full flex-shrink-0"
-                        style={{ background: item.color }}
-                      />
-                      {/* Tên phim và thông tin */}
-                      <span className="text-[11px] text-gray-400 whitespace-nowrap">
-                        {item.text}
-                      </span>
-                    </span>
-                  ))}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* accent line top */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] z-40 transition-all duration-500" style={{ background: `linear-gradient(90deg, ${s.accentFrom}, ${s.accentTo}60, transparent)` }} />
     </div>
   );
 }
