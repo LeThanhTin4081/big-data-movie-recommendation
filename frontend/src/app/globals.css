@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-<<<<<<< HEAD
 /* ==============================================================================
    GLOBAL STYLES - Hệ thống Gợi ý Phim
    ============================================================================== */
@@ -166,7 +165,7 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -180,10 +179,21 @@ body {
    ============================================================================== */
 
 @keyframes kenBurns {
-  0%   { transform: scale(1.05) translate(0px, 0px); }
-  33%  { transform: scale(1.08) translate(-8px, -4px); }
-  66%  { transform: scale(1.06) translate(4px, -6px); }
-  100% { transform: scale(1.05) translate(0px, 0px); }
+  0% {
+    transform: scale(1.05) translate(0px, 0px);
+  }
+
+  33% {
+    transform: scale(1.08) translate(-8px, -4px);
+  }
+
+  66% {
+    transform: scale(1.06) translate(4px, -6px);
+  }
+
+  100% {
+    transform: scale(1.05) translate(0px, 0px);
+  }
 }
 
 .ken-burns {
@@ -195,74 +205,175 @@ body {
    ============================================================================== */
 
 @keyframes slideInLeft {
-  from { opacity: 0; transform: translateX(-40px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 @keyframes slideInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shimmer {
-  0%   { background-position: -400px 0; }
-  100% { background-position: 400px 0; }
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: 400px 0;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-8px); }
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
 }
 
 @keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes particleFloat {
-  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0.6; }
-  50%  { transform: translateY(-30px) translateX(10px) scale(1.1); opacity: 1; }
-  100% { transform: translateY(-60px) translateX(-5px) scale(0.8); opacity: 0; }
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-30px) translateX(10px) scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(-60px) translateX(-5px) scale(0.8);
+    opacity: 0;
+  }
 }
 
 @keyframes flowDash {
-  to { stroke-dashoffset: -24; }
+  to {
+    stroke-dashoffset: -24;
+  }
 }
 
 @keyframes modalIn {
-  from { opacity: 0; transform: scale(0.94) translateY(20px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 @keyframes overlayIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes tickerScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
-.animate-slideInLeft  { animation: slideInLeft  0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.animate-slideInUp    { animation: slideInUp    0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.animate-fadeInScale  { animation: fadeInScale  0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.animate-fadeInDown   { animation: fadeInDown   0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.animate-float        { animation: float 4s ease-in-out infinite; }
-.animate-modalIn      { animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-.animate-overlayIn    { animation: overlayIn 0.25s ease forwards; }
-.animate-ticker       { animation: tickerScroll 28s linear infinite; }
+.animate-slideInLeft {
+  animation: slideInLeft 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-slideInUp {
+  animation: slideInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fadeInScale {
+  animation: fadeInScale 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-modalIn {
+  animation: modalIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-overlayIn {
+  animation: overlayIn 0.25s ease forwards;
+}
+
+.animate-ticker {
+  animation: tickerScroll 28s linear infinite;
+}
 
 .pipeline-line {
   stroke-dasharray: 8 6;
@@ -270,12 +381,10 @@ body {
 }
 
 .skeleton {
-  background: linear-gradient(
-    90deg,
-    rgba(255,255,255,0.04) 25%,
-    rgba(255,255,255,0.08) 50%,
-    rgba(255,255,255,0.04) 75%
-  );
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0.04) 25%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 75%);
   background-size: 400px 100%;
   animation: shimmer 1.8s infinite;
   border-radius: 8px;
@@ -305,7 +414,7 @@ body {
   font-size: 7rem;
   font-weight: 900;
   line-height: 1;
-  -webkit-text-stroke: 3px rgba(255,255,255,0.15);
+  -webkit-text-stroke: 3px rgba(255, 255, 255, 0.15);
   color: transparent;
   letter-spacing: -4px;
   position: absolute;
@@ -396,22 +505,4 @@ body {
 
 .rec-input::placeholder {
   color: var(--color-text-muted);
-=======
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
->>>>>>> c0393d970b2f378d18ac59ebb71244b48cdb7332
 }
