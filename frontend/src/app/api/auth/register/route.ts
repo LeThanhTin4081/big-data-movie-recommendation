@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, favorite_genres } = await request.json();
 
     // 1. Kiểm tra đầu vào
     if (!name || !email || !password) {
@@ -28,18 +28,20 @@ export async function POST(request: Request) {
       );
     }
 
-    // 4. Sinh ngẫu nhiên User ID (1 - 943) để khớp với tập dữ liệu MovieLens 100k
-    const randomUserId = Math.floor(Math.random() * 943) + 1;
+    // 4. Sinh ngẫu nhiên User ID mới (> 943 để không trùng với data MovieLens cũ)
+    // Điều này đánh dấu họ là "Người dùng mới" gặp vấn đề Cold Start
+    const newUserId = Math.floor(Math.random() * 900000) + 1000;
 
     // 5. Mã hóa mật khẩu
     const hashedPassword = await hashPassword(password);
 
-    // 6. Lưu user mới vào collection 'users'
+    // 6. Lưu user mới vào collection 'users', kèm theo thể loại yêu thích (nếu có)
     const newUser = {
       name,
       email,
       password: hashedPassword,
-      userId: randomUserId,
+      userId: newUserId,
+      favorite_genres: favorite_genres || [],
       createdAt: new Date(),
     };
 

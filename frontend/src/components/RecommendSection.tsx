@@ -5,11 +5,10 @@
 // Hiện tại dùng mock data, sau này sẽ gọi API kết nối MongoDB
 
 import { useState, useEffect } from "react";
-import {
-  getRecommendations,
-  QUICK_USER_IDS,
-  Recommendation,
-} from "@/lib/mock-data";
+import { Recommendation } from "@/lib/types";
+
+const QUICK_USER_IDS = [1, 42, 100, 500];
+
 import MovieCard from "./MovieCard";
 import { useAuth } from "@/context/AuthContext";
 

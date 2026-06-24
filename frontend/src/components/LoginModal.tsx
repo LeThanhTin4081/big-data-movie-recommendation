@@ -13,7 +13,7 @@ interface LoginModalProps {
 }
 
 // Các tab chính
-type MainTab = "login" | "register";
+type MainTab = "login" | "register" | "genre";
 // Các bước trong luồng quên mật khẩu
 type ForgotStep = "email" | "otp" | "newPassword";
 
@@ -41,6 +41,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  // Thể loại phim yêu thích
+  const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const AVAILABLE_GENRES = ["Hành động", "Phiêu lưu", "Tình cảm", "Hài hước", "Kinh dị", "Tâm lý", "Hoạt hình", "Viễn tưởng"];
 
   // Refs cho các ô OTP
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -92,6 +96,8 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     setSuccessMessage("");
     setIsForgot(false);
     setForgotStep("email");
+    setSelectedGenres([]);
+    setTab("login");
   };
 
   // Xử lý chuyển tab chính
@@ -252,15 +258,22 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       setError("Vui lòng điền đầy đủ thông tin");
       return;
     }
-    if (tab === "register" && !name) {
-      setError("Vui lòng nhập họ tên");
+    if (tab === "register") {
+      if (!name) {
+        setError("Vui lòng nhập họ tên");
+        return;
+      }
+      if (password.length < 8) {
+        setError("Mật khẩu phải có ít nhất 8 ký tự");
+        return;
+      }
+      // Chuyển sang bước chọn thể loại thay vì đăng ký luôn
+      setTab("genre");
       return;
     }
 
     setIsLoading(true);
-    const result = tab === "login"
-      ? await login(email, password)
-      : await signUp(name, email, password);
+    const result = await login(email, password);
     setIsLoading(false);
 
     if (result.success) {
@@ -268,6 +281,26 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       resetAll();
     } else {
       setError(result.error || "Đã xảy ra lỗi!");
+    }
+  };
+
+  // ---- Xử lý submit bước chọn thể loại (Đăng ký thực sự) ----
+  const handleGenreSubmit = async () => {
+    if (selectedGenres.length === 0) {
+      setError("Vui lòng chọn ít nhất 1 thể loại bạn yêu thích!");
+      return;
+    }
+
+    setIsLoading(true);
+    setError("");
+    const result = await signUp(name, email, password, selectedGenres);
+    setIsLoading(false);
+
+    if (result.success) {
+      onClose();
+      resetAll();
+    } else {
+      setError(result.error || "Đã xảy ra lỗi khi tạo tài khoản!");
     }
   };
 
@@ -501,9 +534,64 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   </button>
                 </p>
               </div>
+            ) : tab === "genre" ? (
+              /* ===== FORM CHỌN THỂ LOẠI (BƯỚC 2 CỦA ĐĂNG KÝ) ===== */
+              <div className="animate-fade-in">
+                <h3 className="text-white font-bold text-center text-lg mb-2">Chọn thể loại yêu thích</h3>
+                <p className="text-gray-400 text-xs text-center mb-6">
+                  Giúp chúng tôi cá nhân hóa trải nghiệm và đưa ra gợi ý phim phù hợp nhất cho bạn.
+                </p>
+
+                <div className="flex flex-wrap gap-2.5 justify-center mb-6">
+                  {AVAILABLE_GENRES.map(genre => {
+                    const isSelected = selectedGenres.includes(genre);
+                    return (
+                      <button
+                        key={genre}
+                        type="button"
+                        onClick={() => {
+                          setError("");
+                          if (isSelected) {
+                            setSelectedGenres(prev => prev.filter(g => g !== genre));
+                          } else {
+                            setSelectedGenres(prev => [...prev, genre]);
+                          }
+                        }}
+                        className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-200 border ${
+                          isSelected 
+                            ? "bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-500/30" 
+                            : "bg-white/5 border-white/10 text-gray-400 hover:border-orange-500/50 hover:text-white"
+                        }`}
+                      >
+                        {genre}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {error && <ErrorBox message={error} />}
+
+                <button
+                  onClick={handleGenreSubmit}
+                  disabled={isLoading}
+                  className="btn-glow w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-50 text-white font-black py-3.5 rounded-xl transition-all duration-200 glow-orange text-sm tracking-wide mt-2"
+                >
+                  {isLoading ? <LoadingSpinner text="Đang xử lý..." /> : "Hoàn tất đăng ký"}
+                </button>
+
+                <p className="text-center mt-5">
+                  <button
+                    type="button"
+                    onClick={() => switchTab("register")}
+                    className="text-gray-500 hover:text-gray-300 text-xs font-semibold transition-colors"
+                  >
+                    ← Quay lại điền thông tin
+                  </button>
+                </p>
+              </div>
             ) : (
               /* ===== FORM ĐĂNG NHẬP / ĐĂNG KÝ ===== */
-              <div>
+              <div className="animate-fade-in">
                 {/* Tab chuyển đổi */}
                 <div className="flex p-1 glass rounded-xl mb-6 relative">
                   {(["login", "register"] as const).map((t) => (

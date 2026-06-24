@@ -6,7 +6,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Movie, Recommendation } from "@/lib/mock-data";
+import { Movie, Recommendation } from "@/lib/types";
 
 // Props cho MovieCard
 interface MovieCardProps {

@@ -4,7 +4,7 @@
 // Nút trái/phải, số thứ tự kiểu Netflix, hover overlay
 
 import { useRef, useState, useCallback, useEffect } from "react";
-import { Movie, Recommendation } from "@/lib/mock-data";
+import { Movie, Recommendation } from "@/lib/types";
 import MovieCard from "./MovieCard";
 import ScrollReveal from "./ScrollReveal";
 

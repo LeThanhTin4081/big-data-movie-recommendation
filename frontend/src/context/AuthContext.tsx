@@ -13,7 +13,7 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string, favoriteGenres?: string[]) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
 }
 
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Đăng ký (API thật)
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, favoriteGenres: string[] = []) => {
     setIsLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -76,7 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, favorite_genres: favoriteGenres }),
       });
 
       const data = await res.json();

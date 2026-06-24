@@ -4,6 +4,7 @@
 // Giao diện dark theme, có logo, menu, ô tìm kiếm và Nút Đăng nhập/Mua gói
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import LoginModal from "./LoginModal";
 import PricingModal from "./PricingModal";
@@ -48,24 +49,24 @@ export default function Navbar() {
 
               {/* MENU CHÍNH - Ẩn trên màn hình nhỏ */}
               <div className="hidden md:flex items-center gap-2">
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="text-white font-medium text-sm px-3 py-1.5 rounded hover:bg-white/10 transition-colors"
                 >
                   Trang chủ
-                </a>
+                </Link>
                 <a
-                  href="#popular"
+                  href="/#popular"
                   className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"
                 >
                   Phim phổ biến
                 </a>
-                <a
-                  href="#recommend"
+                <Link
+                  href="/recommend"
                   className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"
                 >
                   Gợi ý cho bạn
-                </a>
+                </Link>
                 <a
                   href="#about"
                   className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"
