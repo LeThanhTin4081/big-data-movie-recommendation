@@ -1,9 +1,7 @@
 "use client";
 
-// ==============================================================================
 // SCROLL PROGRESS BAR
 // Thanh tiến trình cuộn trang - hiển thị ở trên cùng
-// ==============================================================================
 
 import { useEffect, useRef } from "react";
 

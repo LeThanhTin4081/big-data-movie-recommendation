@@ -1,9 +1,7 @@
 "use client";
 
-// ==============================================================================
 // SCROLL REVEAL WRAPPER
 // Bọc các element để tạo hiệu ứng hiển thị khi cuộn đến
-// ==============================================================================
 
 import { useEffect, useRef, ReactNode } from "react";
 

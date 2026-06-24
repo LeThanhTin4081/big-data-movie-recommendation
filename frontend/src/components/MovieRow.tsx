@@ -1,18 +1,14 @@
 "use client";
 
-// ==============================================================================
 // MOVIE ROW - HÀNG PHIM VỚI NÚT ĐIỀU HƯỚNG VÀ TOP 10 BADGE
 // Nút trái/phải, số thứ tự kiểu Netflix, hover overlay
-// ==============================================================================
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import { Movie, Recommendation } from "@/lib/mock-data";
 import MovieCard from "./MovieCard";
 import ScrollReveal from "./ScrollReveal";
 
-// ------------------------------------------------------------------------------
 // Props
-// ------------------------------------------------------------------------------
 interface MovieRowProps {
   title: string;
   subtitle?: string;
@@ -22,9 +18,7 @@ interface MovieRowProps {
   showTop10?: boolean;
 }
 
-// ------------------------------------------------------------------------------
 // Component MovieRow
-// ------------------------------------------------------------------------------
 export default function MovieRow({
   title,
   subtitle,
@@ -37,9 +31,7 @@ export default function MovieRow({
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // ----------------------------------------------------------------------------
   // Cuộn ngang khi bấm nút mũi tên
-  // ----------------------------------------------------------------------------
   const scroll = useCallback((dir: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
@@ -53,9 +45,7 @@ export default function MovieRow({
     });
   }, []);
 
-  // ----------------------------------------------------------------------------
   // Cập nhật trạng thái nút khi cuộn
-  // ----------------------------------------------------------------------------
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -71,9 +61,7 @@ export default function MovieRow({
     <ScrollReveal>
       <section id={id} className="py-6">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-14">
-          {/* ---------------------------------------------------------------- */}
           {/* TIÊU ĐỀ */}
-          {/* ---------------------------------------------------------------- */}
           <div className="flex items-end justify-between mb-3">
             <div className="flex items-center gap-3">
               <div
@@ -146,9 +134,7 @@ export default function MovieRow({
             </div>
           </div>
 
-          {/* ---------------------------------------------------------------- */}
           {/* DANH SÁCH PHIM */}
-          {/* ---------------------------------------------------------------- */}
           <div
             ref={scrollRef}
             className="movie-row-scroll"

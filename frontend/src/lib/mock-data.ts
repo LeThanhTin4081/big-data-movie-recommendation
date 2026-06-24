@@ -1,12 +1,8 @@
-// ==============================================================================
 // DỮ LIỆU MẪU (MOCK DATA) - VỚI ẢNH THẬT TỪ TMDB PUBLIC CDN
 // Sử dụng các URL poster đã được xác minh hoạt động đúng
 // Dự phòng: Ảnh sẽ bị bắt lỗi bởi onError handler trong MovieCard
-// ==============================================================================
 
-// ------------------------------------------------------------------------------
 // Định nghĩa kiểu dữ liệu cho Phim
-// ------------------------------------------------------------------------------
 export interface Movie {
   movie_id: number;
   title: string;
@@ -22,9 +18,7 @@ export interface Movie {
   quality?: string;
 }
 
-// ------------------------------------------------------------------------------
 // Định nghĩa kiểu dữ liệu cho Gợi ý phim
-// ------------------------------------------------------------------------------
 export interface Recommendation {
   movie_id: number;
   title: string;
@@ -36,16 +30,12 @@ export interface Recommendation {
   description?: string;
 }
 
-// ==============================================================================
 // BASE URL CHO ẢNH TMDB (Public CDN - Không cần API key)
-// ==============================================================================
 const TMDB = "https://image.tmdb.org/t/p";
 const P = `${TMDB}/w342`;   // Poster 342px width
 const B = `${TMDB}/w1280`;  // Backdrop 1280px width
 
-// ==============================================================================
 // PHIM NỔI BẬT TRÊN HERO BANNER (Backdrop đã xác minh)
-// ==============================================================================
 export const FEATURED_MOVIES: Movie[] = [
   {
     movie_id: 11,
@@ -96,9 +86,7 @@ export const FEATURED_MOVIES: Movie[] = [
 
 export const FEATURED_MOVIE = FEATURED_MOVIES[0];
 
-// ==============================================================================
 // PHIM PHỔ BIẾN NHẤT (Poster URL đã xác minh từ TMDB)
-// ==============================================================================
 export const POPULAR_MOVIES: Movie[] = [
   {
     movie_id: 11,
@@ -202,9 +190,7 @@ export const POPULAR_MOVIES: Movie[] = [
   },
 ];
 
-// ==============================================================================
 // PHIM HÀNH ĐỘNG
-// ==============================================================================
 export const ACTION_MOVIES: Movie[] = [
   {
     movie_id: 85,
@@ -288,9 +274,7 @@ export const ACTION_MOVIES: Movie[] = [
   },
 ];
 
-// ==============================================================================
 // PHIM KINH ĐIỂN / CHÍNH KỊCH
-// ==============================================================================
 export const DRAMA_MOVIES: Movie[] = [
   {
     movie_id: 278,
@@ -374,9 +358,7 @@ export const DRAMA_MOVIES: Movie[] = [
   },
 ];
 
-// ==============================================================================
 // PHIM HÀI / HOẠT HÌNH
-// ==============================================================================
 export const COMEDY_MOVIES: Movie[] = [
   {
     movie_id: 862,
@@ -460,9 +442,7 @@ export const COMEDY_MOVIES: Movie[] = [
   },
 ];
 
-// ==============================================================================
 // GỢI Ý MẪU CHO MỘT SỐ USER ID (Dữ liệu mock từ ALS model)
-// ==============================================================================
 export const MOCK_RECOMMENDATIONS: Record<number, Recommendation[]> = {
   1: [
     {
@@ -654,14 +634,10 @@ export const MOCK_RECOMMENDATIONS: Record<number, Recommendation[]> = {
   ],
 };
 
-// ==============================================================================
 // HÀM TRẢ VỀ GỢI Ý THEO USER ID
-// ==============================================================================
 export function getRecommendations(userId: number): Recommendation[] {
   return MOCK_RECOMMENDATIONS[userId] || [];
 }
 
-// ==============================================================================
 // DANH SÁCH USER IDS CÓ SẴN ĐỂ THỬ NHANH
-// ==============================================================================
 export const QUICK_USER_IDS = [1, 42, 100, 500];

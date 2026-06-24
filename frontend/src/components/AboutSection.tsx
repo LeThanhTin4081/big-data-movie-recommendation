@@ -1,7 +1,5 @@
-// ==============================================================================
 // ABOUT SECTION - GIỚI THIỆU VỀ DỰ ÁN
 // Thông tin về công nghệ sử dụng và kiến trúc hệ thống
-// ==============================================================================
 
 export default function AboutSection() {
   const techStack = [
@@ -34,9 +32,7 @@ export default function AboutSection() {
   return (
     <section id="about" className="py-16">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ------------------------------------------------------------------ */}
         {/* TIÊU ĐỀ */}
-        {/* ------------------------------------------------------------------ */}
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             Về dự án
@@ -47,9 +43,7 @@ export default function AboutSection() {
           </p>
         </div>
 
-        {/* ------------------------------------------------------------------ */}
         {/* CÔNG NGHỆ SỬ DỤNG */}
-        {/* ------------------------------------------------------------------ */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {techStack.map((tech) => (
             <div
@@ -73,9 +67,7 @@ export default function AboutSection() {
           ))}
         </div>
 
-        {/* ------------------------------------------------------------------ */}
         {/* KIẾN TRÚC HỆ THỐNG */}
-        {/* ------------------------------------------------------------------ */}
         <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-gray-700/30 rounded-2xl p-8">
           <h3 className="text-white text-xl font-bold mb-6 text-center">
             Kiến trúc hệ thống

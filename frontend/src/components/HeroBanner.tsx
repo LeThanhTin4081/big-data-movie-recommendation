@@ -1,22 +1,16 @@
 "use client";
 
-// ==============================================================================
 // HERO BANNER - NÂNG CẤP TOÀN DIỆN
 // Ken Burns effect, progress bar, thumbnail strip, particle effects
-// ==============================================================================
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { FEATURED_MOVIES } from "@/lib/mock-data";
 
-// ------------------------------------------------------------------------------
 // Thời gian mỗi slide (ms)
-// ------------------------------------------------------------------------------
 const SLIDE_DURATION = 7000;
 
-// ------------------------------------------------------------------------------
 // Component Particle nhỏ trang trí
-// ------------------------------------------------------------------------------
 function Particle({ delay, x, size }: { delay: number; x: number; size: number }) {
   return (
     <div
@@ -33,9 +27,7 @@ function Particle({ delay, x, size }: { delay: number; x: number; size: number }
   );
 }
 
-// ------------------------------------------------------------------------------
 // Component ThumbnailStrip - Danh sách thumbnail dưới hero
-// ------------------------------------------------------------------------------
 function ThumbnailStrip({
   currentIndex,
   onSelect,
@@ -75,9 +67,7 @@ function ThumbnailStrip({
   );
 }
 
-// ------------------------------------------------------------------------------
 // Component chính HeroBanner
-// ------------------------------------------------------------------------------
 export default function HeroBanner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
@@ -89,9 +79,7 @@ export default function HeroBanner() {
 
   const movie = FEATURED_MOVIES[currentIndex];
 
-  // ----------------------------------------------------------------------------
   // Hàm chuyển slide
-  // ----------------------------------------------------------------------------
   const goToSlide = useCallback((index: number) => {
     if (index === currentIndex || isTransitioning) return;
 
@@ -112,9 +100,7 @@ export default function HeroBanner() {
     goToSlide(next);
   }, [currentIndex, goToSlide]);
 
-  // ----------------------------------------------------------------------------
   // Cập nhật progress bar theo thời gian thực
-  // ----------------------------------------------------------------------------
   useEffect(() => {
     setProgress(0);
     startTimeRef.current = Date.now();
@@ -137,9 +123,7 @@ export default function HeroBanner() {
     };
   }, [currentIndex, goToNext]);
 
-  // ----------------------------------------------------------------------------
   // Các particle ngẫu nhiên
-  // ----------------------------------------------------------------------------
   const particles = Array.from({ length: 8 }, (_, i) => ({
     delay: i * 0.7,
     x: 10 + i * 11,
@@ -148,9 +132,7 @@ export default function HeroBanner() {
 
   return (
     <section className="relative w-full h-[90vh] min-h-[650px] overflow-hidden bg-black noise-overlay">
-      {/* -------------------------------------------------------------------- */}
       {/* ẢNH BACKDROP VỚI KEN BURNS EFFECT */}
-      {/* -------------------------------------------------------------------- */}
       {FEATURED_MOVIES.map((m, i) => (
         <div
           key={m.movie_id}
@@ -193,9 +175,7 @@ export default function HeroBanner() {
         </div>
       ))}
 
-      {/* -------------------------------------------------------------------- */}
       {/* GRADIENT LAYERS - Tạo chiều sâu cinematic */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-10">
         {/* Gradient trái - cho chữ */}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-transparent" />
@@ -211,18 +191,14 @@ export default function HeroBanner() {
         />
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* PARTICLES */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
         {particles.map((p, i) => (
           <Particle key={i} {...p} />
         ))}
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* NỘI DUNG CHÍNH */}
-      {/* -------------------------------------------------------------------- */}
       <div className="relative z-20 h-full flex items-end pb-20">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-14 w-full">
           <div
@@ -394,14 +370,10 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* THUMBNAIL STRIP - Góc dưới phải */}
-      {/* -------------------------------------------------------------------- */}
       <ThumbnailStrip currentIndex={currentIndex} onSelect={goToSlide} />
 
-      {/* -------------------------------------------------------------------- */}
       {/* PROGRESS BARS - Cho từng slide */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute bottom-0 left-0 right-0 z-30 flex">
         {FEATURED_MOVIES.map((_, i) => (
           <button
@@ -427,9 +399,7 @@ export default function HeroBanner() {
         ))}
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* MŨI TÊN ĐIỀU HƯỚNG */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 hidden lg:flex">
         <button
           onClick={() =>
