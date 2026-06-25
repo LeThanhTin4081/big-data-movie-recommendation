@@ -5,13 +5,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import LoginModal from "./LoginModal";
 import PricingModal from "./PricingModal";
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const router = useRouter();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
   
   // State cho Modals
@@ -87,6 +90,15 @@ export default function Navbar() {
                       placeholder="Tìm kiếm phim..."
                       className="bg-transparent text-white text-sm px-3 py-1.5 w-48 outline-none placeholder:text-gray-500"
                       autoFocus
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" && searchQuery.trim()) {
+                          router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+                          setIsSearchOpen(false);
+                          setSearchQuery("");
+                        }
+                      }}
                       onBlur={() => setIsSearchOpen(false)}
                     />
                     <button

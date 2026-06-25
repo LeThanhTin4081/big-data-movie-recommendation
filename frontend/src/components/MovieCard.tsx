@@ -6,6 +6,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Movie, Recommendation } from "@/lib/types";
 
 // Props cho MovieCard
@@ -49,12 +50,13 @@ export default function MovieCard({
   const titleInitial = movie.title.charAt(0).toUpperCase();
 
   return (
-    <div
-      className="movie-card group relative flex-shrink-0 w-[155px] sm:w-[170px] cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ scrollSnapAlign: "start" }}
-    >
+    <Link href={`/movie/${movie.movie_id}`} passHref>
+      <div
+        className="movie-card group relative flex-shrink-0 w-[155px] sm:w-[170px] cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{ scrollSnapAlign: "start" }}
+      >
       {/* POSTER PHIM */}
       <div className="relative aspect-[2/3] w-full bg-gray-900 overflow-hidden rounded-lg shadow-lg">
 
@@ -168,5 +170,6 @@ export default function MovieCard({
         </div>
       </div>
     </div>
+    </Link>
   );
 }
