@@ -1,16 +1,12 @@
 "use client";
 
-// ==============================================================================
 // STATS SECTION - SỐ LIỆU DỰ ÁN VỚI ANIMATED COUNTER
 // Hiển thị các con số quan trọng khi scroll đến
-// ==============================================================================
 
 import { useEffect, useRef, useState } from "react";
 import ScrollReveal from "./ScrollReveal";
 
-// ------------------------------------------------------------------------------
 // Hàm đếm số lên đến target
-// ------------------------------------------------------------------------------
 function useCountUp(target: number, duration: number, start: boolean) {
   const [count, setCount] = useState(0);
   const frameRef = useRef<number>(0);
@@ -40,9 +36,7 @@ function useCountUp(target: number, duration: number, start: boolean) {
   return count;
 }
 
-// ------------------------------------------------------------------------------
 // Component một ô stat đơn lẻ
-// ------------------------------------------------------------------------------
 interface StatItemProps {
   value: number;
   label: string;
@@ -114,9 +108,7 @@ function StatItem({
   );
 }
 
-// ------------------------------------------------------------------------------
 // Component StatsSection chính
-// ------------------------------------------------------------------------------
 export default function StatsSection() {
   const [started, setStarted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);

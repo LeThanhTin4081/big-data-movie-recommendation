@@ -1,28 +1,23 @@
 "use client";
 
-// ==============================================================================
 // MOVIE CARD COMPONENT - VỚI ẢNH POSTER THẬT
 // Hiển thị poster phim từ TMDB, có hiệu ứng hover đẹp
 // Fallback gradient đẹp khi ảnh không load được
-// ==============================================================================
 
 import { useState } from "react";
 import Image from "next/image";
-import { Movie, Recommendation } from "@/lib/mock-data";
+import Link from "next/link";
+import { Movie, Recommendation } from "@/lib/types";
 
-// ------------------------------------------------------------------------------
 // Props cho MovieCard
-// ------------------------------------------------------------------------------
 interface MovieCardProps {
   movie: Movie | Recommendation;
   variant?: "default" | "recommendation";
   index?: number;
 }
 
-// ------------------------------------------------------------------------------
 // Màu gradient fallback khi không load được ảnh
 // Mỗi phim có màu khác nhau dựa trên movie_id
-// ------------------------------------------------------------------------------
 const FALLBACK_GRADIENTS = [
   "from-blue-950 via-blue-900 to-slate-900",
   "from-red-950 via-red-900 to-slate-900",
@@ -34,9 +29,7 @@ const FALLBACK_GRADIENTS = [
   "from-teal-950 via-teal-900 to-slate-900",
 ];
 
-// ------------------------------------------------------------------------------
 // Component MovieCard chính
-// ------------------------------------------------------------------------------
 export default function MovieCard({
   movie,
   variant = "default",
@@ -57,15 +50,14 @@ export default function MovieCard({
   const titleInitial = movie.title.charAt(0).toUpperCase();
 
   return (
-    <div
-      className="movie-card group relative flex-shrink-0 w-[155px] sm:w-[170px] cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      style={{ scrollSnapAlign: "start" }}
-    >
-      {/* -------------------------------------------------------------------- */}
+    <Link href={`/movie/${movie.movie_id}`} passHref>
+      <div
+        className="movie-card group relative flex-shrink-0 w-[155px] sm:w-[170px] cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{ scrollSnapAlign: "start" }}
+      >
       {/* POSTER PHIM */}
-      {/* -------------------------------------------------------------------- */}
       <div className="relative aspect-[2/3] w-full bg-gray-900 overflow-hidden rounded-lg shadow-lg">
 
         {/* Ảnh poster hoặc fallback gradient đẹp */}
@@ -159,9 +151,7 @@ export default function MovieCard({
         </div>
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* TÊN PHIM BÊN DƯỚI POSTER */}
-      {/* -------------------------------------------------------------------- */}
       <div className="pt-2 pb-1 px-0.5">
         <h3 className="text-white text-xs font-semibold leading-tight line-clamp-2 group-hover:text-orange-400 transition-colors duration-200">
           {movie.title}
@@ -180,5 +170,6 @@ export default function MovieCard({
         </div>
       </div>
     </div>
+    </Link>
   );
 }

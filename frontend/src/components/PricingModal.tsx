@@ -1,24 +1,18 @@
 "use client";
 
-// ==============================================================================
 // PRICING MODAL - TRANG MUA GÓI / XEM GÓI DỊCH VỤ
 // Hiển thị 3 gói: Miễn phí, Pro, Premium kiểu FPT Play
-// ==============================================================================
 
 import { useState, useEffect } from "react";
 
-// ------------------------------------------------------------------------------
 // Props
-// ------------------------------------------------------------------------------
 interface PricingModalProps {
   isOpen: boolean;
   onClose: () => void;
   onOpenLogin: () => void;
 }
 
-// ------------------------------------------------------------------------------
 // Cấu hình các gói dịch vụ
-// ------------------------------------------------------------------------------
 const PLANS = [
   {
     id: "free",
@@ -79,9 +73,7 @@ const PLANS = [
   },
 ];
 
-// ------------------------------------------------------------------------------
 // Component chính PricingModal
-// ------------------------------------------------------------------------------
 export default function PricingModal({
   isOpen,
   onClose,
@@ -152,9 +144,7 @@ export default function PricingModal({
         </button>
 
         <div className="p-8 pb-10">
-          {/* ---------------------------------------------------------------- */}
           {/* HEADER */}
-          {/* ---------------------------------------------------------------- */}
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 glass border border-orange-500/20 rounded-full px-4 py-1.5 mb-4">
               <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -199,9 +189,7 @@ export default function PricingModal({
             </div>
           </div>
 
-          {/* ---------------------------------------------------------------- */}
           {/* CÁC GÓI DỊCH VỤ */}
-          {/* ---------------------------------------------------------------- */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 max-w-6xl mx-auto">
             {PLANS.map((plan) => (
               <div

@@ -1,22 +1,70 @@
 "use client";
 
-// ==============================================================================
 // HERO BANNER - NÂNG CẤP TOÀN DIỆN
 // Ken Burns effect, progress bar, thumbnail strip, particle effects
-// ==============================================================================
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { FEATURED_MOVIES } from "@/lib/mock-data";
+import { Movie } from "@/lib/types";
 
-// ------------------------------------------------------------------------------
+// BASE URL CHO ẢNH TMDB (Public CDN - Không cần API key)
+const TMDB = "https://image.tmdb.org/t/p";
+const P = `${TMDB}/w342`;   // Poster 342px width
+const B = `${TMDB}/w1280`;  // Backdrop 1280px width
+
+// PHIM NỔI BẬT TRÊN HERO BANNER (Backdrop đã xác minh)
+const FEATURED_MOVIES: Movie[] = [
+  {
+    movie_id: 11,
+    title: "Star Wars",
+    title_vn: "CHIẾN TRANH GIỮA CÁC VÌ SAO",
+    year: "1977",
+    genres: ["Hành động", "Phiêu lưu", "Viễn tưởng"],
+    rating: 4.4,
+    num_ratings: 583,
+    poster_url: `${P}/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg`,
+    backdrop_url: `${B}/zqkmTXzjkAgXmEWLRsY4UpTWCeo.jpg`,
+    description:
+      "Luke Skywalker tham gia cùng một hiệp sĩ Jedi, một phi công liều lĩnh, một người Wookiee và hai robot để cứu vũ trụ khỏi chế độ độc tài của Lực Lượng Chính quy Độc ác.",
+    duration: "121 phút",
+    quality: "FULL HD",
+  },
+  {
+    movie_id: 278,
+    title: "The Shawshank Redemption",
+    title_vn: "NHÀ TÙ SHAWSHANK",
+    year: "1994",
+    genres: ["Tâm lý", "Chính kịch"],
+    rating: 4.5,
+    num_ratings: 283,
+    poster_url: `${P}/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg`,
+    backdrop_url: `${B}/kXfqcdQKsToO0OUXHcrrNCHDBzO.jpg`,
+    description:
+      "Hai người tù Andy Dufresne và Ellis Boyd hình thành một tình bạn bền chặt, cùng nhau nuôi dưỡng hy vọng và tìm kiếm sự giải thoát trong những năm tháng tù đày.",
+    duration: "142 phút",
+    quality: "FULL HD",
+  },
+  {
+    movie_id: 238,
+    title: "The Godfather",
+    title_vn: "BỐ GIÀ",
+    year: "1972",
+    genres: ["Tội phạm", "Chính kịch"],
+    rating: 4.3,
+    num_ratings: 413,
+    poster_url: `${P}/3bhkrj58Vtu7enYsLcdn3yDjhW8.jpg`,
+    backdrop_url: `${B}/tmU7GeKVybMWFButWEGl2M4GeiP.jpg`,
+    description:
+      "Sự sụp đổ của một gia đình tội phạm Mafia người Mỹ gốc Ý, đi kèm với sự lên ngôi quyền lực và tàn bạo của người con trai út Michael.",
+    duration: "175 phút",
+    quality: "ULTRA HD 4K",
+  },
+];
+
 // Thời gian mỗi slide (ms)
-// ------------------------------------------------------------------------------
 const SLIDE_DURATION = 7000;
 
-// ------------------------------------------------------------------------------
 // Component Particle nhỏ trang trí
-// ------------------------------------------------------------------------------
 function Particle({ delay, x, size }: { delay: number; x: number; size: number }) {
   return (
     <div
@@ -33,9 +81,7 @@ function Particle({ delay, x, size }: { delay: number; x: number; size: number }
   );
 }
 
-// ------------------------------------------------------------------------------
 // Component ThumbnailStrip - Danh sách thumbnail dưới hero
-// ------------------------------------------------------------------------------
 function ThumbnailStrip({
   currentIndex,
   onSelect,
@@ -56,7 +102,7 @@ function ThumbnailStrip({
           }`}
         >
           <Image
-            src={movie.backdrop_url || movie.poster_url}
+            src={movie.backdrop_url || "" || movie.poster_url}
             alt={movie.title}
             fill
             unoptimized
@@ -75,9 +121,7 @@ function ThumbnailStrip({
   );
 }
 
-// ------------------------------------------------------------------------------
 // Component chính HeroBanner
-// ------------------------------------------------------------------------------
 export default function HeroBanner() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState<number | null>(null);
@@ -89,9 +133,7 @@ export default function HeroBanner() {
 
   const movie = FEATURED_MOVIES[currentIndex];
 
-  // ----------------------------------------------------------------------------
   // Hàm chuyển slide
-  // ----------------------------------------------------------------------------
   const goToSlide = useCallback((index: number) => {
     if (index === currentIndex || isTransitioning) return;
 
@@ -112,9 +154,7 @@ export default function HeroBanner() {
     goToSlide(next);
   }, [currentIndex, goToSlide]);
 
-  // ----------------------------------------------------------------------------
   // Cập nhật progress bar theo thời gian thực
-  // ----------------------------------------------------------------------------
   useEffect(() => {
     setProgress(0);
     startTimeRef.current = Date.now();
@@ -137,9 +177,7 @@ export default function HeroBanner() {
     };
   }, [currentIndex, goToNext]);
 
-  // ----------------------------------------------------------------------------
   // Các particle ngẫu nhiên
-  // ----------------------------------------------------------------------------
   const particles = Array.from({ length: 8 }, (_, i) => ({
     delay: i * 0.7,
     x: 10 + i * 11,
@@ -148,9 +186,7 @@ export default function HeroBanner() {
 
   return (
     <section className="relative w-full h-[90vh] min-h-[650px] overflow-hidden bg-black noise-overlay">
-      {/* -------------------------------------------------------------------- */}
       {/* ẢNH BACKDROP VỚI KEN BURNS EFFECT */}
-      {/* -------------------------------------------------------------------- */}
       {FEATURED_MOVIES.map((m, i) => (
         <div
           key={m.movie_id}
@@ -193,9 +229,7 @@ export default function HeroBanner() {
         </div>
       ))}
 
-      {/* -------------------------------------------------------------------- */}
       {/* GRADIENT LAYERS - Tạo chiều sâu cinematic */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-10">
         {/* Gradient trái - cho chữ */}
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-transparent" />
@@ -211,18 +245,14 @@ export default function HeroBanner() {
         />
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* PARTICLES */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden">
         {particles.map((p, i) => (
           <Particle key={i} {...p} />
         ))}
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* NỘI DUNG CHÍNH */}
-      {/* -------------------------------------------------------------------- */}
       <div className="relative z-20 h-full flex items-end pb-20">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-14 w-full">
           <div
@@ -394,14 +424,10 @@ export default function HeroBanner() {
         </div>
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* THUMBNAIL STRIP - Góc dưới phải */}
-      {/* -------------------------------------------------------------------- */}
       <ThumbnailStrip currentIndex={currentIndex} onSelect={goToSlide} />
 
-      {/* -------------------------------------------------------------------- */}
       {/* PROGRESS BARS - Cho từng slide */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute bottom-0 left-0 right-0 z-30 flex">
         {FEATURED_MOVIES.map((_, i) => (
           <button
@@ -427,9 +453,7 @@ export default function HeroBanner() {
         ))}
       </div>
 
-      {/* -------------------------------------------------------------------- */}
       {/* MŨI TÊN ĐIỀU HƯỚNG */}
-      {/* -------------------------------------------------------------------- */}
       <div className="absolute right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-2 hidden lg:flex">
         <button
           onClick={() =>

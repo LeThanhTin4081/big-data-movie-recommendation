@@ -21,9 +21,7 @@ function BackToTop() {
   );
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // Helper: danh sách link nối bởi dấu "|"
-// ──────────────────────────────────────────────────────────────────────────────
 function LinkRow({ items }: { items: { label: string; href?: string }[] }) {
   return (
     <div className="flex flex-wrap items-center gap-y-1">
@@ -45,9 +43,7 @@ function LinkRow({ items }: { items: { label: string; href?: string }[] }) {
   );
 }
 
-// ──────────────────────────────────────────────────────────────────────────────
 // Footer chính
-// ──────────────────────────────────────────────────────────────────────────────
 export default function Footer() {
   const [email, setEmail] = useState("");
 
@@ -57,13 +53,11 @@ export default function Footer() {
         id="about"
         style={{ background: "#0a0a0a", borderTop: "1px solid rgba(255,255,255,0.07)" }}
       >
-        {/* ============================================================ */}
-        {/* PHẦN CHÍNH – compact 1 dòng giống FPT Play                    */}
-        {/* ============================================================ */}
+        {/* PHẦN CHÍNH – compact 1 dòng giống FPT Play */}
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-14 py-6">
           <div className="grid grid-cols-1 md:grid-cols-[auto_1fr_1fr_auto] gap-8 items-start">
 
-            {/* ── CỘT 1: LOGO + BADGE + MXH ── */}
+            {/* Cột 1: LOGO + BADGE + MXH */}
             <div className="flex flex-col gap-3 min-w-[140px]">
               {/* Logo */}
               <a href="/" className="flex items-center gap-2 group w-fit">
@@ -126,7 +120,7 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* ── CỘT 2: SẢN PHẨM & DỊCH VỤ ── */}
+            {/* Cột 2: SẢN PHẨM & DỊCH VỤ */}
             <div className="flex flex-col gap-2">
               <h3 className="text-white font-bold text-sm mb-1">Sản phẩm & Dịch vụ</h3>
 
@@ -144,7 +138,7 @@ export default function Footer() {
               ]} />
             </div>
 
-            {/* ── CỘT 3: QUY ĐỊNH & THÔNG TIN ── */}
+            {/* Cột 3: QUY ĐỊNH & THÔNG TIN */}
             <div className="flex flex-col gap-2">
               <h3 className="text-white font-bold text-sm mb-1">Quy định & Thông tin</h3>
 
@@ -163,7 +157,7 @@ export default function Footer() {
               ]} />
             </div>
 
-            {/* ── CỘT 4: TẢI ỨNG DỤNG ── */}
+            {/* Cột 4: TẢI ỨNG DỤNG */}
             <div className="flex flex-col gap-3 min-w-[180px]">
               <h3 className="text-white font-bold text-sm mb-1">Tải ứng dụng trên</h3>
 
@@ -206,9 +200,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ============================================================ */}
-        {/* DÒNG DƯỚI – thông tin pháp lý                                */}
-        {/* ============================================================ */}
+        {/* Dòng dưới – thông tin pháp lý */}
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-14 py-4">
             <div className="text-center space-y-1">

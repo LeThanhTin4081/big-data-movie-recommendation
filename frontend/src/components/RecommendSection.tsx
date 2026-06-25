@@ -1,34 +1,59 @@
 "use client";
 
-// ==============================================================================
 // PHẦN GỢI Ý PHIM THEO USER ID
 // Người dùng nhập User ID -> Hệ thống trả về Top 5 phim gợi ý
 // Hiện tại dùng mock data, sau này sẽ gọi API kết nối MongoDB
-// ==============================================================================
 
-import { useState } from "react";
-import {
-  getRecommendations,
-  QUICK_USER_IDS,
-  Recommendation,
-} from "@/lib/mock-data";
+import { useState, useEffect } from "react";
+import { Recommendation } from "@/lib/types";
+
+const QUICK_USER_IDS = [1, 42, 100, 500];
+
 import MovieCard from "./MovieCard";
+import { useAuth } from "@/context/AuthContext";
 
-// ------------------------------------------------------------------------------
 // Component RecommendSection
 // Giao diện nhập User ID và hiển thị kết quả gợi ý phim
-// ------------------------------------------------------------------------------
 export default function RecommendSection() {
+  const { user } = useAuth();
   const [userId, setUserId] = useState<string>("");
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string>("");
 
-  // ----------------------------------------------------------------------------
+  // Tự động điền User ID khi người dùng đăng nhập/đổi tài khoản
+  useEffect(() => {
+    if (user?.userId) {
+      setUserId(user.userId.toString());
+      // Tự động lấy danh sách gợi ý khi đăng nhập
+      const fetchDirectly = async () => {
+        setIsLoading(true);
+        setHasSearched(true);
+        try {
+          const res = await fetch(`/api/recommend?userId=${user.userId}`);
+          const data = await res.json();
+          if (res.ok && data.success) {
+            setRecommendations(data.recommendations);
+          } else {
+            setError(data.error || "Không thể tải gợi ý phim.");
+          }
+        } catch (err) {
+          setError("Lỗi kết nối khi tải gợi ý.");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+      fetchDirectly();
+    } else {
+      setUserId("");
+      setRecommendations([]);
+      setHasSearched(false);
+    }
+  }, [user]);
+
   // Xử lý khi người dùng bấm nút "Gợi ý" hoặc nhấn Enter
   // Hiện tại dùng mock data, sau sẽ thay bằng API call
-  // ----------------------------------------------------------------------------
   const handleRecommend = async () => {
     const id = parseInt(userId);
 
@@ -46,30 +71,28 @@ export default function RecommendSection() {
     setIsLoading(true);
     setHasSearched(true);
 
-    // Mô phỏng thời gian xử lý (sau sẽ thay bằng fetch API)
-    await new Promise((resolve) => setTimeout(resolve, 800));
-
-    // TODO: Thay bằng API call thực tế
-    // const res = await fetch(`/api/recommend?userId=${id}`);
-    // const data = await res.json();
-    // setRecommendations(data.recommendations);
-
-    const results = getRecommendations(id);
-    setRecommendations(results);
-    setIsLoading(false);
+    try {
+      const res = await fetch(`/api/recommend?userId=${id}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRecommendations(data.recommendations);
+      } else {
+        setError(data.error || "Không thể tải gợi ý phim.");
+      }
+    } catch (err) {
+      setError("Lỗi kết nối khi tải gợi ý.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // ----------------------------------------------------------------------------
   // Xử lý khi người dùng chọn User ID nhanh
-  // ----------------------------------------------------------------------------
   const handleQuickSelect = (id: number) => {
     setUserId(id.toString());
     setError("");
   };
 
-  // ----------------------------------------------------------------------------
   // Xử lý phím Enter
-  // ----------------------------------------------------------------------------
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleRecommend();
@@ -79,9 +102,7 @@ export default function RecommendSection() {
   return (
     <section id="recommend" className="py-12">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        {/* ------------------------------------------------------------------ */}
         {/* TIÊU ĐỀ VÀ MÔ TẢ */}
-        {/* ------------------------------------------------------------------ */}
         <div className="text-center mb-10">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-3">
             Gợi ý phim dành cho bạn
@@ -93,9 +114,7 @@ export default function RecommendSection() {
           </p>
         </div>
 
-        {/* ------------------------------------------------------------------ */}
         {/* KHUNG NHẬP LIỆU */}
-        {/* ------------------------------------------------------------------ */}
         <div className="max-w-xl mx-auto mb-8">
           {/* Card nền */}
           <div className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/50 rounded-2xl p-6 sm:p-8 shadow-2xl">
@@ -203,9 +222,7 @@ export default function RecommendSection() {
           </div>
         </div>
 
-        {/* ------------------------------------------------------------------ */}
         {/* LOADING SKELETON */}
-        {/* ------------------------------------------------------------------ */}
         {isLoading && (
           <div className="flex justify-center gap-4 flex-wrap">
             {[...Array(5)].map((_, i) => (
@@ -218,9 +235,7 @@ export default function RecommendSection() {
           </div>
         )}
 
-        {/* ------------------------------------------------------------------ */}
         {/* KẾT QUẢ GỢI Ý */}
-        {/* ------------------------------------------------------------------ */}
         {!isLoading && hasSearched && (
           <div className="animate-fadeInUp">
             {recommendations.length > 0 ? (

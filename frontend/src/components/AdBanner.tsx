@@ -1,15 +1,13 @@
 "use client";
 
-// ==============================================================================
 // AD BANNER — LPBANK VISA — COMPACT 145px VERSION
-// ==============================================================================
 
 import { useState, useEffect, useCallback } from "react";
 import {
   CreditCard, Gift, Ticket, Globe, Lock, Smartphone, Trophy, Star, Tv, ChevronRight,
 } from "lucide-react";
 
-// ---------- Types ----------
+// Types
 interface Slide {
   id: number;
   accentFrom: string;
@@ -25,7 +23,7 @@ interface Slide {
   cardLabels: string[];
 }
 
-// ---------- Data ----------
+// Data
 const SLIDES: Slide[] = [
   {
     id: 0,
@@ -83,7 +81,7 @@ const SLIDES: Slide[] = [
   },
 ];
 
-// ---------- Icon helper ----------
+// Icon helper
 function Ico({ name, size = 14 }: { name: string; size?: number }) {
   const p = { size, strokeWidth: 2.2 };
   switch (name) {
@@ -100,7 +98,7 @@ function Ico({ name, size = 14 }: { name: string; size?: number }) {
   }
 }
 
-// ---------- Mini Visa Card ----------
+// Mini Visa Card
 function MiniCard({ label, accent, rotate, lift, isCenter }: {
   label: string; accent: string; rotate: number; lift: number; isCenter?: boolean;
 }) {
@@ -159,9 +157,7 @@ function MiniCard({ label, accent, rotate, lift, isCenter }: {
   );
 }
 
-// ==============================================================================
 // MAIN COMPONENT
-// ==============================================================================
 export default function AdBanner() {
   const [visible, setVisible] = useState(true);
   const [idx, setIdx] = useState(0);
@@ -190,7 +186,7 @@ export default function AdBanner() {
   return (
     <div className="w-full select-none relative overflow-hidden" style={{ height: 145 }}>
 
-      {/* ─── BG gradient ─── */}
+      {/* BG gradient */}
       <div
         className="absolute inset-0 transition-all duration-600"
         style={{ background: `linear-gradient(100deg, #0c0c14 0%, #0c0c14 40%, ${s.accentFrom}08 70%, ${s.accentFrom}12 100%)` }}
@@ -201,7 +197,7 @@ export default function AdBanner() {
         style={{ background: `radial-gradient(ellipse, ${s.accentFrom}12 0%, transparent 70%)` }}
       />
 
-      {/* ─── TOP BAR ─── */}
+      {/* TOP BAR */}
       <div className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-[3px]">
         <div className="flex items-center gap-1.5">
           <span className="w-[5px] h-[5px] rounded-full animate-pulse" style={{ background: s.accentFrom }} />
@@ -214,10 +210,10 @@ export default function AdBanner() {
         </button>
       </div>
 
-      {/* ─── CONTENT ROW ─── */}
+      {/* CONTENT ROW */}
       <div className="relative z-20 h-full flex items-center justify-center gap-8 lg:gap-16 w-full max-w-6xl mx-auto pt-5 pb-4 px-4">
 
-        {/* ── LEFT COLUMN: Text ── */}
+        {/* LEFT COLUMN: Text */}
         <div
           className="flex-shrink-0 flex flex-col justify-center gap-2 transition-all duration-300 w-[340px] md:w-[400px]"
           style={{ opacity: fade ? 0 : 1, transform: fade ? "translateX(-6px)" : "translateX(0)" }}
@@ -244,7 +240,7 @@ export default function AdBanner() {
           <p className="text-[11px] text-white/50 w-full truncate">{s.subtext}</p>
         </div>
 
-        {/* ── CENTER COLUMN: Badges + CTA ── */}
+        {/* CENTER COLUMN: Badges + CTA */}
         <div
           className="hidden lg:flex flex-shrink-0 flex-col justify-center gap-3 transition-all duration-300 px-8 border-l border-white/10"
           style={{ opacity: fade ? 0 : 1, transform: fade ? "scale(0.95)" : "scale(1)", minWidth: "160px" }}
@@ -272,7 +268,7 @@ export default function AdBanner() {
           </a>
         </div>
 
-        {/* ── RIGHT: 3 Visa cards fan ── */}
+        {/* RIGHT: 3 Visa cards fan */}
         <div
           className="hidden md:flex flex-shrink-0 items-center justify-center transition-all duration-300 w-[240px]"
           style={{ opacity: fade ? 0 : 1, transform: fade ? "translateX(8px)" : "translateX(0)" }}
@@ -284,7 +280,7 @@ export default function AdBanner() {
 
       </div>
 
-      {/* ─── BOTTOM BAR: dots + info ─── */}
+      {/* BOTTOM BAR: dots + info */}
       <div className="absolute bottom-0 left-0 right-0 z-30 flex items-center justify-between px-4 py-[3px]">
         <div className="flex items-center gap-1">
           {SLIDES.map((_, i) => (

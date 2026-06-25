@@ -1,9 +1,7 @@
 "use client";
 
-// ==============================================================================
 // CUSTOM CURSOR - Con trỏ tùy chỉnh
 // Dot cam + ring theo sau, hiệu ứng hover khi di qua các element tương tác
-// ==============================================================================
 
 import { useEffect, useRef, useState } from "react";
 

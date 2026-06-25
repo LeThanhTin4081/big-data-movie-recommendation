@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import ScrollProgress from "@/components/ScrollProgress";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: "T3V Play - Hệ thống Gợi ý Phim | Big Data Apache Spark",
@@ -15,8 +16,11 @@ export default function RootLayout({
     <html lang="vi">
       <body className="antialiased">
         <ScrollProgress />
-            {children}
-          </body>
-        </html>
-        );
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
+    </html>
+  );
 }
+
