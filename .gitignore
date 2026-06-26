@@ -13,6 +13,7 @@ data/
 __pycache__/
 *.py[cod]
 *$py.class
+fetch_posters.py
 
 # Jupyter Notebook
 .ipynb_checkpoints/
