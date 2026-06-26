@@ -153,7 +153,7 @@ export default function Footer() {
               <LinkRow items={[
                 { label: "Liên hệ" },
                 { label: "Hotline: 1900 6600", href: "tel:19006600" },
-                { label: "Email: hotro@movierec.vn", href: "mailto:hotro@movierec.vn" },
+                { label: "Email: hotro@t3vplay.vn", href: "mailto:hotro@t3vplay.vn" },
               ]} />
             </div>
 
