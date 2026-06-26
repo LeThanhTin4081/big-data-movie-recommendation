@@ -19,4 +19,6 @@ export interface Recommendation {
   predicted_rating: number;
   genres: string[];
   poster_url: string;
+  backdrop_url?: string;
+  description?: string;
 }

@@ -4,7 +4,8 @@
 // Hiển thị poster phim từ TMDB, có hiệu ứng hover đẹp
 // Fallback gradient đẹp khi ảnh không load được
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { Movie, Recommendation } from "@/lib/types";
@@ -37,6 +38,53 @@ export default function MovieCard({
 }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [showHoverCard, setShowHoverCard] = useState(false);
+  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+  const cardRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Xóa timeout khi unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    };
+  }, []);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    hoverTimeoutRef.current = setTimeout(() => {
+      if (cardRef.current) {
+        const rect = cardRef.current.getBoundingClientRect();
+        const popW = window.innerWidth < 640 ? 280 : 340;
+        
+        let left = rect.left + rect.width / 2 - popW / 2;
+        const margin = 24;
+        if (left < margin) left = margin;
+        if (left + popW > window.innerWidth - margin) {
+          left = window.innerWidth - popW - margin;
+        }
+
+        const top = rect.top + rect.height / 2;
+
+        setPopupStyle({
+          position: "fixed",
+          top: `${top}px`,
+          left: `${left}px`,
+          width: `${popW}px`,
+          transform: "translate(0, -50%)",
+          zIndex: 99999,
+        });
+        setShowHoverCard(true);
+      }
+    }, 500);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setShowHoverCard(false);
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+  };
 
   const isRecommendation = "predicted_rating" in movie;
   const rating = isRecommendation
@@ -52,9 +100,10 @@ export default function MovieCard({
   return (
     <Link href={`/movie/${movie.movie_id}`} passHref>
       <div
+        ref={cardRef}
         className="movie-card group relative flex-shrink-0 w-[155px] sm:w-[170px] cursor-pointer"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
         style={{ scrollSnapAlign: "start" }}
       >
       {/* POSTER PHIM */}
@@ -169,6 +218,87 @@ export default function MovieCard({
           </span>
         </div>
       </div>
+
+      {/* HOVER CARD POPUP - SỬ DỤNG PORTAL ĐỂ KHÔNG BỊ CẮT XÉN */}
+      {showHoverCard && typeof document !== "undefined" && createPortal(
+        <div
+          className="bg-gray-900 rounded-xl overflow-hidden shadow-[0_20px_60px_-10px_rgba(0,0,0,0.9)] ring-1 ring-white/20 transition-all duration-300 animate-in zoom-in-95 fade-in cursor-default"
+          style={popupStyle}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          onClick={(e) => {
+            // Ngăn sự kiện click bọt lên thẻ Link bên dưới nếu click vào các nút phụ
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        >
+          {/* Backdrop Ảnh (Top) */}
+          <div className="relative aspect-video w-full bg-black">
+            {movie.backdrop_url || movie.poster_url ? (
+              <Image
+                src={movie.backdrop_url || movie.poster_url}
+                alt={movie.title}
+                fill
+                unoptimized
+                className="object-cover opacity-80"
+              />
+            ) : (
+              <div className={`absolute inset-0 bg-gradient-to-br ${fallbackGradient}`} />
+            )}
+            {/* Nút Play to bự giữa ảnh */}
+            <Link href={`/movie/${movie.movie_id}`} className="absolute inset-0 flex items-center justify-center group/play">
+              <div className="w-14 h-14 bg-white/20 backdrop-blur-md group-hover/play:bg-orange-600 group-hover/play:scale-110 rounded-full flex items-center justify-center transition-all duration-300 shadow-2xl border border-white/40 group-hover/play:border-orange-500">
+                <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+              </div>
+            </Link>
+            {/* Gradient đáy che mượt */}
+            <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-t from-[#111111] to-transparent pointer-events-none" />
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+              <h3 className="text-white font-black text-xl leading-tight line-clamp-1 drop-shadow-lg">{movie.title}</h3>
+            </div>
+          </div>
+
+          {/* Nội dung bên dưới */}
+          <div className="px-4 pb-4 pt-1 bg-[#111111]">
+            {/* Nút hành động */}
+            <div className="flex items-center gap-3 mb-4">
+              <Link href={`/movie/${movie.movie_id}`}>
+                <button className="flex items-center gap-2 bg-white text-black px-5 py-2 rounded-md font-bold hover:bg-gray-200 transition-colors shadow-lg">
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" /></svg>
+                  Phát
+                </button>
+              </Link>
+              <button className="w-9 h-9 border-2 border-gray-500 text-white rounded-full flex items-center justify-center hover:border-white hover:bg-white/10 transition bg-black/50">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
+              </button>
+              <button className="w-9 h-9 border-2 border-gray-500 text-white rounded-full flex items-center justify-center hover:border-white hover:bg-white/10 transition bg-black/50">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+              </button>
+            </div>
+
+            {/* Thông tin rating, year, quality */}
+            <div className="flex items-center gap-3 mb-3 text-[13px] font-bold">
+              <span className="text-green-500 text-sm">★ {rating.toFixed(1)} Điểm</span>
+              <span className="text-gray-300">{"year" in movie ? movie.year : "N/A"}</span>
+              <span className="border border-gray-500 px-1.5 py-0.5 text-[10px] text-gray-300 rounded-sm">HD</span>
+            </div>
+
+            {/* Thể loại */}
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {movie.genres.slice(0, 3).map((g) => (
+                <span key={g} className="text-[11px] font-medium text-gray-300 border border-gray-700 bg-gray-800/80 px-2.5 py-0.5 rounded-full">{g}</span>
+              ))}
+            </div>
+
+            {/* Mô tả tự sinh siêu ngầu */}
+            <p className="text-[13px] text-gray-400 line-clamp-3 leading-relaxed">
+              {movie.description || `Một tác phẩm điện ảnh xuất sắc thuộc thể loại ${movie.genres.slice(0, 2).join(", ")}, mang đến những khung hình mãn nhãn và cốt truyện lôi cuốn. Được giới phê bình đánh giá cao và thu hút hàng triệu lượt xem trên toàn cầu.`}
+            </p>
+          </div>
+        </div>,
+        document.body
+      )}
+
     </div>
     </Link>
   );

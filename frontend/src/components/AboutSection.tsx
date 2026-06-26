@@ -1,31 +1,36 @@
 // ABOUT SECTION - GIỚI THIỆU VỀ DỰ ÁN
 // Thông tin về công nghệ sử dụng và kiến trúc hệ thống
+import { Flame, Database, LayoutTemplate, Container } from "lucide-react";
 
 export default function AboutSection() {
   const techStack = [
     {
       name: "Apache Spark",
       description: "Xử lý dữ liệu lớn và huấn luyện mô hình ALS",
-      icon: "⚡",
-      color: "#e25a1c",
+      icon: <Flame className="w-8 h-8 text-orange-500" strokeWidth={1.5} />,
+      color: "from-orange-600 to-orange-400",
+      shadow: "shadow-orange-500/20",
     },
     {
       name: "MongoDB",
       description: "Lưu trữ phim, đánh giá và kết quả gợi ý",
-      icon: "🍃",
-      color: "#00ed64",
+      icon: <Database className="w-8 h-8 text-emerald-500" strokeWidth={1.5} />,
+      color: "from-emerald-600 to-emerald-400",
+      shadow: "shadow-emerald-500/20",
     },
     {
       name: "Next.js",
       description: "Frontend framework hiện đại với React",
-      icon: "▲",
-      color: "#ffffff",
+      icon: <LayoutTemplate className="w-8 h-8 text-white" strokeWidth={1.5} />,
+      color: "from-gray-300 to-white",
+      shadow: "shadow-white/10",
     },
     {
       name: "Docker",
       description: "Container hóa toàn bộ hệ thống",
-      icon: "🐳",
-      color: "#2496ed",
+      icon: <Container className="w-8 h-8 text-blue-500" strokeWidth={1.5} />,
+      color: "from-blue-600 to-blue-400",
+      shadow: "shadow-blue-500/20",
     },
   ];
 
@@ -48,37 +53,38 @@ export default function AboutSection() {
           {techStack.map((tech) => (
             <div
               key={tech.name}
-              className="bg-gradient-to-br from-gray-900 to-gray-800 border border-gray-700/40 rounded-xl p-6 hover:border-gray-600 transition-all hover:transform hover:scale-105 group"
+              className="relative group bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-8 hover:bg-white/[0.02] transition-all duration-700 hover:-translate-y-3 overflow-hidden"
             >
+              {/* Ánh sáng nền (Ambient glow) */}
+              <div className={`absolute -top-24 -right-24 w-48 h-48 bg-gradient-to-br ${tech.color} rounded-full blur-[80px] opacity-20 group-hover:opacity-40 transition-opacity duration-700`} />
+              
               <div
-                className="text-3xl mb-3 group-hover:scale-110 transition-transform"
-                aria-hidden="true"
+                className={`relative z-10 w-16 h-16 rounded-2xl bg-gradient-to-br ${tech.color} p-[1px] mb-6 shadow-2xl ${tech.shadow} group-hover:scale-110 transition-transform duration-500`}
               >
-                {tech.icon}
+                <div className="w-full h-full bg-[#111] rounded-2xl flex items-center justify-center drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
+                  <div>
+                    {tech.icon}
+                  </div>
+                </div>
               </div>
-              <h3
-                className="text-lg font-bold mb-1"
-                style={{ color: tech.color }}
-              >
+              <h3 className={`relative z-10 text-xl font-black mb-2 tracking-tight bg-gradient-to-br ${tech.color} text-transparent bg-clip-text`}>
                 {tech.name}
               </h3>
-              <p className="text-gray-400 text-sm">{tech.description}</p>
+              <p className="relative z-10 text-gray-400 text-sm leading-relaxed">{tech.description}</p>
             </div>
           ))}
         </div>
 
         {/* KIẾN TRÚC HỆ THỐNG */}
-        <div className="bg-gradient-to-br from-gray-900/80 to-gray-800/50 border border-gray-700/30 rounded-2xl p-8">
-          <h3 className="text-white text-xl font-bold mb-6 text-center">
+        <div className="bg-gradient-to-b from-white/5 to-transparent border border-white/10 backdrop-blur-md rounded-3xl p-8 shadow-2xl">
+          <h3 className="text-white text-2xl font-bold mb-8 text-center tracking-tight">
             Kiến trúc hệ thống
           </h3>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {/* Dataset */}
-            <div className="bg-blue-900/30 border border-blue-700/40 rounded-lg px-4 py-3 text-center">
-              <div className="text-blue-400 font-bold text-sm">
-                MovieLens 100k
-              </div>
-              <div className="text-gray-500 text-xs mt-1">Dataset</div>
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl px-5 py-4 text-center shadow-lg hover:bg-blue-500/20 transition-colors">
+              <div className="text-blue-400 font-bold text-sm tracking-wide">MovieLens 100k</div>
+              <div className="text-gray-400 text-xs mt-1.5 uppercase tracking-widest font-semibold">Dataset</div>
             </div>
 
             <svg
@@ -96,11 +102,9 @@ export default function AboutSection() {
             </svg>
 
             {/* Spark */}
-            <div className="bg-orange-900/30 border border-orange-700/40 rounded-lg px-4 py-3 text-center">
-              <div className="text-orange-400 font-bold text-sm">
-                Apache Spark
-              </div>
-              <div className="text-gray-500 text-xs mt-1">ALS Training</div>
+            <div className="bg-orange-500/10 border border-orange-500/30 rounded-xl px-5 py-4 text-center shadow-lg hover:bg-orange-500/20 transition-colors">
+              <div className="text-orange-400 font-bold text-sm tracking-wide">Apache Spark</div>
+              <div className="text-gray-400 text-xs mt-1.5 uppercase tracking-widest font-semibold">ALS Training</div>
             </div>
 
             <svg
@@ -118,9 +122,9 @@ export default function AboutSection() {
             </svg>
 
             {/* MongoDB */}
-            <div className="bg-green-900/30 border border-green-700/40 rounded-lg px-4 py-3 text-center">
-              <div className="text-green-400 font-bold text-sm">MongoDB</div>
-              <div className="text-gray-500 text-xs mt-1">Storage</div>
+            <div className="bg-green-500/10 border border-green-500/30 rounded-xl px-5 py-4 text-center shadow-lg hover:bg-green-500/20 transition-colors">
+              <div className="text-green-400 font-bold text-sm tracking-wide">MongoDB</div>
+              <div className="text-gray-400 text-xs mt-1.5 uppercase tracking-widest font-semibold">Storage</div>
             </div>
 
             <svg
@@ -138,9 +142,9 @@ export default function AboutSection() {
             </svg>
 
             {/* API */}
-            <div className="bg-purple-900/30 border border-purple-700/40 rounded-lg px-4 py-3 text-center">
-              <div className="text-purple-400 font-bold text-sm">REST API</div>
-              <div className="text-gray-500 text-xs mt-1">Backend</div>
+            <div className="bg-purple-500/10 border border-purple-500/30 rounded-xl px-5 py-4 text-center shadow-lg hover:bg-purple-500/20 transition-colors">
+              <div className="text-purple-400 font-bold text-sm tracking-wide">REST API</div>
+              <div className="text-gray-400 text-xs mt-1.5 uppercase tracking-widest font-semibold">Backend</div>
             </div>
 
             <svg
@@ -158,9 +162,9 @@ export default function AboutSection() {
             </svg>
 
             {/* Frontend */}
-            <div className="bg-gray-700/30 border border-gray-600/40 rounded-lg px-4 py-3 text-center">
-              <div className="text-white font-bold text-sm">Next.js</div>
-              <div className="text-gray-500 text-xs mt-1">Frontend</div>
+            <div className="bg-white/10 border border-white/20 rounded-xl px-5 py-4 text-center shadow-lg hover:bg-white/20 transition-colors">
+              <div className="text-white font-bold text-sm tracking-wide">Next.js</div>
+              <div className="text-gray-400 text-xs mt-1.5 uppercase tracking-widest font-semibold">Frontend</div>
             </div>
           </div>
         </div>
