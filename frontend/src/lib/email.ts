@@ -9,13 +9,11 @@ export async function sendOtpEmail(email: string, otp: string): Promise<boolean>
   // Nếu không có thông tin đăng nhập SMTP, ta giả lập ghi log ra console của Terminal
   if (!user || !pass) {
     console.log("\n");
-    console.log("=====================================================================");
-    console.log("              [MOCK EMAIL SERVICE — THỜI GIAN THỬ NGHIỆM]            ");
+        console.log("              [MOCK EMAIL SERVICE — THỜI GIAN THỬ NGHIỆM]            ");
     console.log(` Gửi tới: ${email}`);
     console.log(` Nội dung: Mã xác thực OTP của bạn là: ${otp}`);
     console.log(" Thời hạn: Mã này sẽ hết hạn sau 5 phút.");
-    console.log("=====================================================================\n");
-    return true;
+        return true;
   }
 
   try {

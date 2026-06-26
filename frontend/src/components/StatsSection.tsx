@@ -4,6 +4,7 @@
 // Hiển thị các con số quan trọng khi scroll đến
 
 import { useEffect, useRef, useState } from "react";
+import { BarChart3, Users, Clapperboard, Sparkles } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
 // Hàm đếm số lên đến target
@@ -69,25 +70,30 @@ function StatItem({
   const count = useCountUp(value, 2000, localStart);
 
   return (
-    <div className="relative group">
       <div
-        className="glass rounded-2xl p-6 text-center transition-all duration-300 group-hover:scale-105 overflow-hidden"
-        style={{
-          borderColor: `${color}30`,
-          boxShadow: `0 0 30px ${color}10`,
-        }}
+        className="relative bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-8 text-center transition-all duration-700 hover:-translate-y-3 hover:bg-white/[0.02] overflow-hidden group/card"
       >
+        {/* Ánh sáng nền (Ambient glow) */}
+        <div 
+          className="absolute -bottom-24 -left-24 w-48 h-48 rounded-full blur-[80px] opacity-20 group-hover/card:opacity-40 transition-opacity duration-700 pointer-events-none" 
+          style={{ background: color }}
+        />
+
         {/* Icon */}
         <div
-          className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4"
-          style={{ background: `${color}20`, color }}
+          className="relative z-10 w-16 h-16 rounded-2xl p-[1px] mx-auto mb-6 shadow-2xl group-hover/card:scale-110 transition-transform duration-500"
+          style={{ background: `linear-gradient(135deg, ${color}, transparent)` }}
         >
-          {icon}
+          <div className="w-full h-full bg-[#111] rounded-2xl flex items-center justify-center">
+            <div style={{ color }}>
+              {icon}
+            </div>
+          </div>
         </div>
 
         {/* Số đếm */}
         <div
-          className="text-4xl font-black mb-1 tabular-nums"
+          className="text-4xl font-extrabold mb-1 tabular-nums tracking-tight"
           style={{ color }}
         >
           {prefix}
@@ -104,7 +110,6 @@ function StatItem({
           style={{ background: `linear-gradient(90deg, transparent, ${color}, transparent)` }}
         />
       </div>
-    </div>
   );
 }
 
@@ -138,39 +143,21 @@ export default function StatsSection() {
       suffix: "+",
       color: "#f97316",
       delay: 0,
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-            d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-          />
-        </svg>
-      ),
+      icon: <BarChart3 className="w-8 h-8" strokeWidth={1.5} />,
     },
     {
       value: 943,
       label: "Người dùng",
       color: "#3b82f6",
       delay: 150,
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
-      ),
+      icon: <Users className="w-8 h-8" strokeWidth={1.5} />,
     },
     {
       value: 1682,
       label: "Bộ phim",
       color: "#a855f7",
       delay: 300,
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-            d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z"
-          />
-        </svg>
-      ),
+      icon: <Clapperboard className="w-8 h-8" strokeWidth={1.5} />,
     },
     {
       value: 5,
@@ -178,13 +165,7 @@ export default function StatsSection() {
       prefix: "Top ",
       color: "#22c55e",
       delay: 450,
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-          />
-        </svg>
-      ),
+      icon: <Sparkles className="w-8 h-8" strokeWidth={1.5} />,
     },
   ];
 
