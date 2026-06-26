@@ -368,7 +368,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               </p>
             </div>
 
-            {/* ===== LUỒNG QUÊN MẬT KHẨU ===== */}
+            {/* LUỒNG QUÊN MẬT KHẨU */}
             {isForgot ? (
               <div>
                 {/* Thanh tiến trình 3 bước */}
@@ -535,7 +535,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </p>
               </div>
             ) : tab === "genre" ? (
-              /* ===== FORM CHỌN THỂ LOẠI (BƯỚC 2 CỦA ĐĂNG KÝ) ===== */
+              /* FORM CHỌN THỂ LOẠI (BƯỚC 2 CỦA ĐĂNG KÝ) */
               <div className="animate-fade-in">
                 <h3 className="text-white font-bold text-center text-lg mb-2">Chọn thể loại yêu thích</h3>
                 <p className="text-gray-400 text-xs text-center mb-6">
@@ -590,7 +590,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 </p>
               </div>
             ) : (
-              /* ===== FORM ĐĂNG NHẬP / ĐĂNG KÝ ===== */
+              /* FORM ĐĂNG NHẬP / ĐĂNG KÝ */
               <div className="animate-fade-in">
                 {/* Tab chuyển đổi */}
                 <div className="flex p-1 glass rounded-xl mb-6 relative">
