@@ -70,6 +70,12 @@ export default function Navbar() {
                 >
                   Gợi ý cho bạn
                 </Link>
+                <Link
+                  href="/favorites"
+                  className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  Phim yêu thích
+                </Link>
                 <a
                   href="/#about"
                   className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"

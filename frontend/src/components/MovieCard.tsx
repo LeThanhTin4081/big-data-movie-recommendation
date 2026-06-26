@@ -37,18 +37,63 @@ export default function MovieCard({
   index = 0,
 }: MovieCardProps) {
   const [imgError, setImgError] = useState(false);
+  const [realPosterUrl, setRealPosterUrl] = useState<string | null>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [showHoverCard, setShowHoverCard] = useState(false);
   const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+  const [isFavorite, setIsFavorite] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Xóa timeout khi unmount
   useEffect(() => {
+    try {
+      const favs = JSON.parse(localStorage.getItem('t3v_favorites') || '[]');
+      setIsFavorite(favs.includes(movie.movie_id));
+    } catch (e) {}
+    
     return () => {
       if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     };
-  }, []);
+  }, [movie.movie_id]);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      const favs = JSON.parse(localStorage.getItem('t3v_favorites') || '[]');
+      let newFavs;
+      if (isFavorite) {
+        newFavs = favs.filter((id: number) => id !== movie.movie_id);
+        setIsFavorite(false);
+      } else {
+        newFavs = [...favs, movie.movie_id];
+        setIsFavorite(true);
+      }
+      localStorage.setItem('t3v_favorites', JSON.stringify(newFavs));
+      window.dispatchEvent(new Event('favoritesUpdated'));
+    } catch (e) {}
+  };
+
+  // Fetch poster from local map if the current image is a placeholder
+  useEffect(() => {
+    // Only fetch if it's the placeholder and no real poster url is set yet
+    if ((movie.poster_url.includes("placeholder.com") || imgError) && !realPosterUrl) {
+      fetch('/poster_map.json')
+        .then(res => res.json())
+        .then(map => {
+          if (map[movie.movie_id]) {
+            setRealPosterUrl(map[movie.movie_id]);
+            setImgError(false); // Reset error state to render image
+          } else {
+            setImgError(true); // Force fallback if no image mapped
+          }
+        })
+        .catch(err => {
+          setImgError(true);
+        });
+    }
+  }, [movie.movie_id, movie.poster_url, imgError, realPosterUrl]);
 
   const handleMouseEnter = () => {
     setIsHovered(true);
@@ -110,9 +155,9 @@ export default function MovieCard({
       <div className="relative aspect-[2/3] w-full bg-gray-900 overflow-hidden rounded-lg shadow-lg">
 
         {/* Ảnh poster hoặc fallback gradient đẹp */}
-        {!imgError ? (
+        {(!imgError && (realPosterUrl || !movie.poster_url.includes("placeholder.com"))) ? (
           <Image
-            src={movie.poster_url}
+            src={realPosterUrl || movie.poster_url}
             alt={movie.title}
             fill
             unoptimized
@@ -154,6 +199,20 @@ export default function MovieCard({
             </span>
           </div>
         )}
+
+        {/* Nút Yêu Thích (Heart) */}
+        <button
+          onClick={toggleFavorite}
+          className={`absolute top-2 ${("quality" in movie && (movie as Movie).quality) ? "right-12" : "right-2"} z-20 w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-md transition-all duration-300 ${
+            isFavorite 
+              ? "bg-red-500/90 text-white shadow-[0_0_10px_rgba(239,68,68,0.5)]" 
+              : "bg-black/50 text-white/70 hover:bg-black/80 hover:text-white border border-white/20"
+          } ${isHovered ? "opacity-100 scale-100" : "opacity-0 scale-90"}`}
+        >
+          <svg className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={isFavorite ? "0" : "2"} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
 
         {/* Nút play xuất hiện khi hover */}
         <div
@@ -234,9 +293,9 @@ export default function MovieCard({
         >
           {/* Backdrop Ảnh (Top) */}
           <div className="relative aspect-video w-full bg-black">
-            {movie.backdrop_url || movie.poster_url ? (
+            {!imgError && realPosterUrl ? (
               <Image
-                src={movie.backdrop_url || movie.poster_url}
+                src={realPosterUrl}
                 alt={movie.title}
                 fill
                 unoptimized
@@ -271,8 +330,17 @@ export default function MovieCard({
               <button className="w-9 h-9 border-2 border-gray-500 text-white rounded-full flex items-center justify-center hover:border-white hover:bg-white/10 transition bg-black/50">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
               </button>
-              <button className="w-9 h-9 border-2 border-gray-500 text-white rounded-full flex items-center justify-center hover:border-white hover:bg-white/10 transition bg-black/50">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" /></svg>
+              <button 
+                onClick={toggleFavorite}
+                className={`w-9 h-9 border-2 rounded-full flex items-center justify-center transition-colors ${
+                  isFavorite 
+                    ? "border-red-500 bg-red-500 text-white shadow-[0_0_10px_rgba(239,68,68,0.5)]" 
+                    : "border-gray-500 bg-black/50 text-white hover:border-white hover:bg-white/10"
+                }`}
+              >
+                <svg className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={isFavorite ? "0" : "2"} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
               </button>
             </div>
 
