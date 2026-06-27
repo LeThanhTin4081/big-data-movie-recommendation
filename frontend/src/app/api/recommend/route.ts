@@ -80,28 +80,51 @@ export async function GET(request: NextRequest) {
       isColdStart = true;
       const genre = searchParams.get("genre");
 
-      let aggregatePipeline: any[] = [];
-      let matchStage: any = { _id: { $in: validMovieIds } }; // Đảm bảo luôn CÓ ẢNH
+      // 1. TOP 5 PHIM THỊNH HÀNH NHẤT (Cố định từ Ảnh 1)
+      // Star Wars (1977)=50, Contact (1997)=258, Fargo (1996)=100, Return of the Jedi (1983)=181, Liar Liar (1997)=294
+      const popularMovieIds = [50, 258, 100, 181, 294];
+      const popularMoviesDocs = await db.collection("movies").find({ _id: { $in: popularMovieIds } } as any).toArray();
+      const top5Movies = popularMovieIds.map(id => popularMoviesDocs.find((m: any) => m._id == id)).filter(Boolean);
+
+      // 2. TOP 5 PHIM BẠN CÓ THỂ THÍCH (Cố định theo UserId và Thể loại)
+      let matchStage: any = { _id: { $in: validMovieIds, $nin: popularMovieIds } };
 
       if (genre) {
         matchStage.genres = { $regex: genre, $options: "i" };
       }
       
-      aggregatePipeline.push({ $match: matchStage });
-      aggregatePipeline.push({ $sample: { size: 10 } });
+      let genreMovies = await db.collection("movies").find(matchStage as any).toArray();
 
-      // Lấy ngẫu nhiên phim theo thể loại (đảm bảo có ảnh)
-      let popularMovies = await db.collection("movies").aggregate(aggregatePipeline).toArray();
-
-      // Nếu database chưa cập nhật thể loại (trả về rỗng), lấy ngẫu nhiên 10 phim CÓ ẢNH
-      if (!popularMovies || popularMovies.length < 10) {
-        popularMovies = await db.collection("movies").aggregate([
-          { $match: { _id: { $in: validMovieIds } } },
-          { $sample: { size: 10 } }
-        ]).toArray();
+      // Nếu database chưa cập nhật thể loại (trả về ít hơn 5 phim), lấy tất cả phim hợp lệ
+      if (!genreMovies || genreMovies.length < 5) {
+        genreMovies = await db.collection("movies").find({ _id: { $in: validMovieIds, $nin: popularMovieIds } } as any).toArray();
       }
 
-      movies = popularMovies.map(m => ({
+      // Hàm bốc ngẫu nhiên nhưng CỐ ĐỊNH theo userId và Thể loại
+      let selectedGenreMovies = [];
+      const uid = parseInt(userIdStr) || 1;
+      
+      // Khởi tạo seed từ userId và genre để mỗi user+genre luôn ra cùng 1 kết quả
+      let seed = uid;
+      if (genre) {
+          for(let i = 0; i < genre.length; i++) {
+              seed = (seed * 31 + genre.charCodeAt(i)) % 1000000;
+          }
+      }
+
+      // Linear congruential generator (LCG)
+      let available = [...genreMovies];
+      for (let i = 0; i < 5 && available.length > 0; i++) {
+          seed = (seed * 9301 + 49297) % 233280;
+          const idx = seed % available.length;
+          selectedGenreMovies.push(available[idx]);
+          available.splice(idx, 1);
+      }
+
+      // Gộp lại thành 10 phim
+      const finalMovies = [...top5Movies, ...selectedGenreMovies].filter(Boolean);
+
+      movies = finalMovies.map((m: any) => ({
         movie_id: m._id,
         title: m.title,
         rating: 5.0, // Điểm ảo cho phim top
