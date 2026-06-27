@@ -87,17 +87,39 @@ export async function GET(request: NextRequest) {
       const top5Movies = popularMovieIds.map(id => popularMoviesDocs.find((m: any) => m._id == id)).filter(Boolean);
 
       // 2. TOP 5 PHIM BẠN CÓ THỂ THÍCH (Cố định theo UserId và Thể loại)
-      let matchStage: any = { _id: { $in: validMovieIds, $nin: popularMovieIds } };
+      let matchStage: any = { _id: { $nin: popularMovieIds } }; // XÓA điều kiện validMovieIds để chấp nhận phim không ảnh
 
       if (genre) {
-        matchStage.genres = { $regex: genre, $options: "i" };
+        // Ánh xạ từ tiếng Việt sang tiếng Anh do database lưu bằng tiếng Anh
+        const genreMap: Record<string, string> = {
+          "Hành động": "Action",
+          "Phiêu lưu": "Adventure",
+          "Hoạt hình": "Animation",
+          "Trẻ em": "Children's",
+          "Hài hước": "Comedy",
+          "Tội phạm": "Crime",
+          "Tài liệu": "Documentary",
+          "Tâm lý": "Drama",
+          "Viễn tưởng": "Fantasy",
+          "Phim đen": "Film-Noir",
+          "Kinh dị": "Horror",
+          "Âm nhạc": "Musical",
+          "Bí ẩn": "Mystery",
+          "Tình cảm": "Romance",
+          "Khoa học viễn tưởng": "Sci-Fi",
+          "Giật gân": "Thriller",
+          "Chiến tranh": "War",
+          "Viễn tây": "Western"
+        };
+        const searchGenre = genreMap[genre] || genre;
+        matchStage.genres = { $regex: searchGenre, $options: "i" };
       }
       
       let genreMovies = await db.collection("movies").find(matchStage as any).toArray();
 
-      // Nếu database chưa cập nhật thể loại (trả về ít hơn 5 phim), lấy tất cả phim hợp lệ
+      // Nếu vẫn ít hơn 5 phim (ví dụ thể loại quá hiếm), lấy random các phim khác
       if (!genreMovies || genreMovies.length < 5) {
-        genreMovies = await db.collection("movies").find({ _id: { $in: validMovieIds, $nin: popularMovieIds } } as any).toArray();
+        genreMovies = await db.collection("movies").find({ _id: { $nin: popularMovieIds } } as any).toArray();
       }
 
       // Hàm bốc ngẫu nhiên nhưng CỐ ĐỊNH theo userId và Thể loại
