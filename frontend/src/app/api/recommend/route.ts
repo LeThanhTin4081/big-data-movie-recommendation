@@ -133,6 +133,11 @@ export async function GET(request: NextRequest) {
       }));
     }
 
+    const genre = searchParams.get("genre");
+    if (genre && genre !== "All") {
+      movies = movies.filter((m: any) => m.genres && m.genres.includes(genre));
+    }
+
     return NextResponse.json({
       success: true,
       userId,
