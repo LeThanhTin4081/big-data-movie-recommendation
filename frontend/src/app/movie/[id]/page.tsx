@@ -4,7 +4,8 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import { generateMovieDescription } from "@/lib/utils";
+import { GoogleGenAI } from "@google/genai";
 // Tắt static render cho các dynamic ID
 export const dynamic = "force-dynamic";
 
@@ -34,6 +35,36 @@ export default async function MovieDetailPage({ params }: { params: { id: string
   const movie = await db.collection("movies").findOne({ _id: movieId } as any);
 
   if (!movie) return notFound();
+
+  // --- GEMINI API: TẠO MÔ TẢ PHIM TỰ ĐỘNG LƯU VÀO CACHE ---
+  let aiDescription = movie.ai_description;
+  if (!aiDescription && process.env.GEMINI_API_KEY) {
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const prompt = `Bạn là một chuyên gia review phim chuyên nghiệp. Hãy viết một đoạn giới thiệu tóm tắt, hấp dẫn (khoảng 3-4 câu) bằng tiếng Việt cho bộ phim "${movie.title}" phát hành năm "${movie.year || 'chưa rõ'}". YÊU CẦU BẮT BUỘC: Không tiết lộ kết thúc. Viết liền mạch, không gạch đầu dòng, không emoji. Tập trung vào điểm nổi bật nhất. Chỉ trả về đúng đoạn văn mô tả.`;
+      
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+      });
+      
+      aiDescription = response.text;
+      
+      // Cache (lưu) vào MongoDB để lần sau không phải gọi lại API (tiết kiệm chi phí và tăng tốc Web)
+      if (aiDescription) {
+        await db.collection("movies").updateOne(
+          { _id: movieId } as any,
+          { $set: { ai_description: aiDescription } }
+        );
+        movie.description = aiDescription;
+      }
+    } catch (error) {
+      console.error("Lỗi khi gọi Gemini API:", error);
+    }
+  } else if (aiDescription) {
+    movie.description = aiDescription;
+  }
+
 
   // Load poster map from public folder
   let realPosterUrl = null;
@@ -121,7 +152,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
               </div>
 
               <p className="text-gray-300 text-base sm:text-lg leading-relaxed mb-8 max-w-3xl">
-                {movie.description || "Hệ thống đang cập nhật thông tin chi tiết và mô tả cho bộ phim này. Vui lòng quay lại sau."}
+                {movie.description || generateMovieDescription(movie.title, movie.genres)}
               </p>
 
               {/* Action Buttons */}

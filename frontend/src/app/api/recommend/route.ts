@@ -38,15 +38,32 @@ export async function GET(request: NextRequest) {
     } as any);
 
     let movies = [];
+    let isColdStart = false;
 
-    if (userRecDoc) {
+    if (userRecDoc && (userRecDoc.recommendations?.length > 0 || userRecDoc.movies?.length > 0)) {
       movies = userRecDoc.recommendations || userRecDoc.movies || [];
+    } else {
+      // COLD START PROBLEM: Người dùng mới (ID > 943) chưa có trong tập train
+      isColdStart = true;
+      // Lấy ngẫu nhiên 10 phim nổi bật từ bảng movies để gợi ý
+      const popularMovies = await db.collection("movies").aggregate([
+        { $sample: { size: 10 } }
+      ]).toArray();
+
+      movies = popularMovies.map(m => ({
+        movie_id: m._id,
+        title: m.title,
+        rating: 5.0, // Điểm ảo cho phim top
+        genres: m.genres,
+        poster_url: "placeholder.com"
+      }));
     }
 
     return NextResponse.json({
       success: true,
       userId,
       recommendations: movies,
+      isColdStart,
       source: "mongodb"
     });
   } catch (error) {
