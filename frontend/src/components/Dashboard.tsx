@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import MovieCard from "./MovieCard";
 import { Movie } from "@/lib/types";
 import { useAuth } from "@/context/AuthContext";
+import { GENRE_MAP } from "@/lib/utils";
 
 const GENRES = ["All", "Action", "Adventure", "Animation", "Comedy", "Crime", "Drama", "Horror", "Romance", "Sci-Fi", "Thriller", "Western"];
 
@@ -79,7 +80,7 @@ export default function Dashboard() {
                 : "bg-gray-800/80 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-700/50"
             }`}
           >
-            {genre}
+            {GENRE_MAP[genre] || genre}
           </button>
         ))}
       </div>
