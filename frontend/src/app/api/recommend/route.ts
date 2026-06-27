@@ -40,15 +40,66 @@ export async function GET(request: NextRequest) {
     let movies = [];
     let isColdStart = false;
 
+    // Đọc danh sách các ID phim có ảnh (poster) hợp lệ
+    let validMovieIds: number[] = [];
+    try {
+      const fs = require('fs');
+      const path = require('path');
+      const posterMapPath = path.join(process.cwd(), 'public', 'poster_map.json');
+      const mapData = JSON.parse(fs.readFileSync(posterMapPath, 'utf8'));
+      validMovieIds = Object.keys(mapData).map(id => parseInt(id, 10));
+    } catch (e) {
+      console.error("Failed to load poster_map.json in API", e);
+    }
+
     if (userRecDoc && (userRecDoc.recommendations?.length > 0 || userRecDoc.movies?.length > 0)) {
-      movies = userRecDoc.recommendations || userRecDoc.movies || [];
+      let rawMovies = userRecDoc.recommendations || userRecDoc.movies || [];
+      // Lọc bỏ các phim KHÔNG có ảnh
+      movies = rawMovies.filter((m: any) => validMovieIds.includes(m.movie_id));
+      
+      // Nếu sau khi lọc mà bị thiếu (nhỏ hơn 10 phim), ta bù thêm bằng các phim phổ biến CÓ ẢNH
+      if (movies.length < 10) {
+        const needed = 10 - movies.length;
+        const existingIds = movies.map((m: any) => m.movie_id);
+        const fallbackMovies = await db.collection("movies").aggregate([
+          { $match: { _id: { $in: validMovieIds, $nin: existingIds } } },
+          { $sample: { size: needed } }
+        ]).toArray();
+        
+        const mappedFallback = fallbackMovies.map(m => ({
+          movie_id: m._id,
+          title: m.title,
+          rating: 4.5,
+          genres: m.genres,
+          poster_url: "placeholder.com"
+        }));
+        movies = [...movies, ...mappedFallback];
+      }
     } else {
-      // COLD START PROBLEM: Người dùng mới (ID > 943) chưa có trong tập train
+      // COLD START PROBLEM: Người dùng mới
       isColdStart = true;
-      // Lấy ngẫu nhiên 10 phim nổi bật từ bảng movies để gợi ý
-      const popularMovies = await db.collection("movies").aggregate([
-        { $sample: { size: 10 } }
-      ]).toArray();
+      const genre = searchParams.get("genre");
+
+      let aggregatePipeline: any[] = [];
+      let matchStage: any = { _id: { $in: validMovieIds } }; // Đảm bảo luôn CÓ ẢNH
+
+      if (genre) {
+        matchStage.genres = { $regex: genre, $options: "i" };
+      }
+      
+      aggregatePipeline.push({ $match: matchStage });
+      aggregatePipeline.push({ $sample: { size: 10 } });
+
+      // Lấy ngẫu nhiên phim theo thể loại (đảm bảo có ảnh)
+      let popularMovies = await db.collection("movies").aggregate(aggregatePipeline).toArray();
+
+      // Nếu database chưa cập nhật thể loại (trả về rỗng), lấy ngẫu nhiên 10 phim CÓ ẢNH
+      if (!popularMovies || popularMovies.length < 10) {
+        popularMovies = await db.collection("movies").aggregate([
+          { $match: { _id: { $in: validMovieIds } } },
+          { $sample: { size: 10 } }
+        ]).toArray();
+      }
 
       movies = popularMovies.map(m => ({
         movie_id: m._id,

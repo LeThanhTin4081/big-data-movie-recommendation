@@ -1,4 +1,12 @@
 import { MongoClient } from "mongodb";
+import dns from "dns";
+
+// Sửa lỗi DNS ECONNREFUSED trên một số máy tính mạng Windows/VPN
+try {
+  dns.setServers(['8.8.8.8', '8.8.4.4']);
+} catch (e) {
+  console.log("Could not set DNS servers");
+}
 
 const uri = process.env.MONGO_URI || "";
 const options = {};

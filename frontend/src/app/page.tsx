@@ -2,8 +2,6 @@ import Navbar from "@/components/Navbar";
 import AdBanner from "@/components/AdBanner";
 import HeroBanner from "@/components/HeroBanner";
 import MovieRow from "@/components/MovieRow";
-import StatsSection from "@/components/StatsSection";
-import AboutSection from "@/components/AboutSection";
 import Footer from "@/components/Footer";
 import FavoriteMoviesRow from "@/components/FavoriteMoviesRow";
 import { connectToDatabase } from "@/lib/mongodb";
@@ -88,8 +86,6 @@ export default async function HomePage() {
           accentColor="bg-green-500"
         />
 
-        <StatsSection />
-        <AboutSection />
         <Footer />
       </div>
     </div>
