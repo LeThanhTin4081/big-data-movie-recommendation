@@ -73,6 +73,19 @@ export default function MovieCard({
       }
       localStorage.setItem('t3v_favorites', JSON.stringify(newFavs));
       window.dispatchEvent(new Event('favoritesUpdated'));
+
+      // Đẩy lên database nếu đang đăng nhập
+      const userStr = localStorage.getItem("t3v_play_user");
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        if (user.userId) {
+          fetch('/api/user/favorites', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ userId: user.userId, favorites: newFavs })
+          }).catch(err => console.error(err));
+        }
+      }
     } catch (e) {}
   };
 
