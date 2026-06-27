@@ -162,6 +162,7 @@ export default function MovieCard({
             alt={movie.title}
             fill
             unoptimized
+            referrerPolicy="no-referrer"
             className={`object-cover object-center transition-transform duration-500 ${
               isHovered ? "scale-110" : "scale-100"
             }`}

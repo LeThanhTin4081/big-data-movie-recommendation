@@ -22,6 +22,7 @@ export default function RecommendSection() {
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string>("");
   const [isColdStart, setIsColdStart] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState<string>("");
 
   // Tự động điền User ID khi người dùng đăng nhập/đổi tài khoản
   useEffect(() => {
@@ -80,6 +81,27 @@ export default function RecommendSection() {
       if (res.ok && data.success) {
         setRecommendations(data.recommendations);
         setIsColdStart(data.isColdStart || false);
+        setSelectedGenre(""); // Reset thể loại khi đổi user
+      } else {
+        setError(data.error || "Không thể tải gợi ý phim.");
+      }
+    } catch (err) {
+      setError("Lỗi kết nối khi tải gợi ý.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Xử lý khi chọn thể loại (Cold Start)
+  const handleGenreSelect = async (genre: string) => {
+    setSelectedGenre(genre);
+    setIsLoading(true);
+    try {
+      const res = await fetch(`/api/recommend?userId=${userId}&genre=${genre}`);
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRecommendations(data.recommendations);
+        setIsColdStart(true);
       } else {
         setError(data.error || "Không thể tải gợi ý phim.");
       }
@@ -112,8 +134,7 @@ export default function RecommendSection() {
             Gợi ý phim dành cho bạn
           </h2>
           <p className="text-gray-400 text-base max-w-2xl mx-auto">
-            Nhập User ID để nhận danh sách bộ phim được gợi ý bởi
-            hệ thống Collaborative Filtering sử dụng thuật toán ALS trên Apache Spark
+            Khám phá những bộ phim tuyệt vời được chọn lọc dựa trên sở thích và hành vi của bạn.
           </p>
         </div>
 
@@ -242,13 +263,36 @@ export default function RecommendSection() {
         {hasSearched && recommendations.length > 0 && (
           <div className="mt-8 animate-fade-in-up">
             {isColdStart ? (
-              <div className="bg-orange-600/20 border border-orange-500/50 p-6 rounded-xl text-center mb-10 max-w-4xl mx-auto">
-                <h3 className="text-xl font-bold text-orange-400 mb-2">👋 Chào mừng người dùng mới!</h3>
-                <p className="text-gray-300">
-                  Vì bạn là người dùng mới tinh và chưa có lịch sử đánh giá phim (vấn đề Cold Start), 
-                  hệ thống tạm thời đề xuất ngẫu nhiên <strong className="text-white">10 bộ phim nổi bật nhất</strong> trong cơ sở dữ liệu. 
-                  Hãy tương tác với các bộ phim để AI bắt đầu học sở thích của bạn nhé!
+              <div className="bg-gradient-to-r from-orange-900/40 to-orange-600/20 border border-orange-500/30 p-6 sm:p-8 rounded-2xl text-center mb-10 max-w-4xl mx-auto shadow-lg backdrop-blur-sm">
+                <h3 className="text-2xl font-bold text-orange-400 mb-4">👋 Chào bạn mới!</h3>
+                <p className="text-gray-300 text-lg mb-6 max-w-2xl mx-auto">
+                  Có vẻ như bạn vừa mới tham gia và chưa xem bộ phim nào cả! 
+                  Để hệ thống có thể gợi ý chính xác những siêu phẩm hợp gu với bạn nhất, 
+                  hãy chọn một thể loại mà bạn đặc biệt yêu thích dưới đây nhé:
                 </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  {[
+                    { id: 'Action', name: 'Hành động' },
+                    { id: 'Comedy', name: 'Hài hước' },
+                    { id: 'Romance', name: 'Tình cảm' },
+                    { id: 'Sci-Fi', name: 'Viễn tưởng' },
+                    { id: 'Horror', name: 'Kinh dị' },
+                    { id: 'Drama', name: 'Tâm lý' },
+                    { id: 'Thriller', name: 'Giật gân' }
+                  ].map((g) => (
+                    <button
+                      key={g.id}
+                      onClick={() => handleGenreSelect(g.id)}
+                      className={`px-5 py-2.5 rounded-full border transition-all duration-300 font-medium ${
+                        selectedGenre === g.id
+                          ? "bg-orange-500 border-orange-400 text-white shadow-[0_0_15px_rgba(249,115,22,0.5)] scale-105"
+                          : "bg-white/5 border-gray-600 text-gray-300 hover:bg-white/10 hover:border-orange-500/50 hover:text-white"
+                      }`}
+                    >
+                      {g.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             ) : (
               <div className="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
@@ -259,34 +303,54 @@ export default function RecommendSection() {
               </div>
             )}
             
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                  {recommendations.map((rec, index) => (
-                    <MovieCard
-                      key={rec.movie_id}
-                      movie={rec}
-                      variant="recommendation"
-                      index={index}
-                    />
-                  ))}
-                </div>
+            {/* Hàng 1: Top 5 phim trong tập train (Phổ biến) */}
+            <div className="mb-10">
+              <h4 className="text-xl font-bold text-white mb-4 border-l-4 border-orange-500 pl-3">
+                Top 5 phim thịnh hành nhất
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {recommendations.slice(0, 5).map((rec, index) => (
+                  <MovieCard
+                    key={`train-${rec.movie_id}-${index}`}
+                    movie={rec}
+                    variant="recommendation"
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
 
-                {/* Ghi chú về thuật toán */}
-                <div className="mt-8 max-w-2xl mx-auto text-center">
-                  <div className="bg-gray-900/50 border border-gray-700/30 rounded-xl p-4">
-                    <p className="text-gray-400 text-sm">
-                      <span className="text-orange-400 font-semibold">
-                        Thuật toán:
-                      </span>{" "}
-                      Kết quả được tạo bởi mô hình Collaborative Filtering (ALS)
-                      huấn luyện trên{" "}
-                      <span className="text-white">100,000 lượt đánh giá</span>{" "}
-                      từ{" "}
-                      <span className="text-white">943 người dùng</span> cho{" "}
-                      <span className="text-white">1,682 bộ phim</span> trong
-                      dataset MovieLens 100k.
-                    </p>
+            {/* Hàng 2: Top 5 phim gợi ý (Dự đoán) */}
+            <div>
+              <h4 className="text-xl font-bold text-white mb-4 border-l-4 border-blue-500 pl-3">
+                Top 5 phim bạn có thể thích
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {recommendations.slice(5, 10).map((rec, index) => (
+                  <MovieCard
+                    key={`rec-${rec.movie_id}-${index}`}
+                    movie={rec}
+                    variant="recommendation"
+                    index={index + 5}
+                  />
+                ))}
+              </div>
+            </div>
+
+                {/* Ghi chú */}
+                {!isColdStart && (
+                  <div className="mt-8 max-w-2xl mx-auto text-center">
+                    <div className="bg-gray-900/50 border border-gray-700/30 rounded-xl p-4">
+                      <p className="text-gray-400 text-sm">
+                        <span className="text-orange-400 font-semibold">
+                          Ghi chú:
+                        </span>{" "}
+                        Kết quả được tạo bởi mô hình Collaborative Filtering (ALS)
+                        huấn luyện trên dataset MovieLens 100k.
+                      </p>
+                    </div>
                   </div>
-                </div>
+                )}
           </div>
         )}
 

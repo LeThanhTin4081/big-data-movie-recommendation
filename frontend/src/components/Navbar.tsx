@@ -76,12 +76,6 @@ export default function Navbar() {
                 >
                   Phim yêu thích
                 </Link>
-                <a
-                  href="/#about"
-                  className="text-gray-300 text-sm px-3 py-1.5 rounded hover:bg-white/10 hover:text-white transition-colors"
-                >
-                  Về dự án
-                </a>
               </div>
             </div>
 
