@@ -44,7 +44,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   // Thể loại phim yêu thích
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-  const AVAILABLE_GENRES = ["Hành động", "Phiêu lưu", "Tình cảm", "Hài hước", "Kinh dị", "Tâm lý", "Hoạt hình", "Viễn tưởng"];
+  const AVAILABLE_GENRES = ["Action", "Adventure", "Animation", "Children's", "Comedy", "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"];
 
   // Refs cho các ô OTP
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);

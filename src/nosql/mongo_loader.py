@@ -34,7 +34,7 @@ def main():
     
     # Bổ sung các trường Fake bắt buộc để khớp với Interface Movie
     movies_pd["year"] = "N/A"
-    movies_pd["genres"] = [["Đang cập nhật"]] * len(movies_pd)
+    movies_pd["genres"] = movies_pd["genres"].apply(list)
     movies_pd["rating"] = 5.0
     movies_pd["num_ratings"] = 0
     movies_pd["poster_url"] = "https://via.placeholder.com/342x513.png?text=No+Poster"
@@ -66,7 +66,7 @@ def main():
             "movie_id": row['movie_id'],
             "title": row['movie_title'],
             "predicted_rating": row['rating'],
-            "genres": ["Đang cập nhật"],
+            "genres": list(row['genres']),
             "poster_url": "https://via.placeholder.com/342x513.png?text=No+Poster"
         }, axis=1
     )
