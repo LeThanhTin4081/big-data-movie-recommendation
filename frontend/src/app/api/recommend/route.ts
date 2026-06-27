@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
       let rawMovies = userRecDoc.recommendations || userRecDoc.movies || [];
       // Lọc bỏ các phim KHÔNG có ảnh
       movies = rawMovies.filter((m: any) => validMovieIds.includes(m.movie_id));
-      
+
       // Nếu sau khi lọc mà bị thiếu (nhỏ hơn 10 phim), ta bù thêm bằng các phim phổ biến CÓ ẢNH
       if (movies.length < 10) {
         const needed = 10 - movies.length;
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
           { $match: { _id: { $in: validMovieIds, $nin: existingIds } } },
           { $sample: { size: needed } }
         ]).toArray();
-        
+
         const mappedFallback = fallbackMovies.map(m => ({
           movie_id: m._id,
           title: m.title,
@@ -114,7 +114,7 @@ export async function GET(request: NextRequest) {
         const searchGenre = genreMap[genre] || genre;
         matchStage.genres = { $regex: searchGenre, $options: "i" };
       }
-      
+
       let genreMovies = await db.collection("movies").find(matchStage as any).toArray();
 
       // Nếu vẫn ít hơn 5 phim (ví dụ thể loại quá hiếm), lấy random các phim khác
@@ -125,22 +125,22 @@ export async function GET(request: NextRequest) {
       // Hàm bốc ngẫu nhiên nhưng CỐ ĐỊNH theo userId và Thể loại
       let selectedGenreMovies = [];
       const uid = parseInt(userIdStr) || 1;
-      
+
       // Khởi tạo seed từ userId và genre để mỗi user+genre luôn ra cùng 1 kết quả
       let seed = uid;
       if (genre) {
-          for(let i = 0; i < genre.length; i++) {
-              seed = (seed * 31 + genre.charCodeAt(i)) % 1000000;
-          }
+        for (let i = 0; i < genre.length; i++) {
+          seed = (seed * 31 + genre.charCodeAt(i)) % 1000000;
+        }
       }
 
       // Linear congruential generator (LCG)
       let available = [...genreMovies];
       for (let i = 0; i < 5 && available.length > 0; i++) {
-          seed = (seed * 9301 + 49297) % 233280;
-          const idx = seed % available.length;
-          selectedGenreMovies.push(available[idx]);
-          available.splice(idx, 1);
+        seed = (seed * 9301 + 49297) % 233280;
+        const idx = seed % available.length;
+        selectedGenreMovies.push(available[idx]);
+        available.splice(idx, 1);
       }
 
       // Gộp lại thành 10 phim
@@ -153,11 +153,6 @@ export async function GET(request: NextRequest) {
         genres: m.genres,
         poster_url: "placeholder.com"
       }));
-    }
-
-    const genre = searchParams.get("genre");
-    if (genre && genre !== "All") {
-      movies = movies.filter((m: any) => m.genres && m.genres.includes(genre));
     }
 
     return NextResponse.json({
