@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/AuthContext";
+import { GENRE_MAP } from "@/lib/utils";
 
 // Props
 interface LoginModalProps {
@@ -563,7 +564,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                             : "bg-white/5 border-white/10 text-gray-400 hover:border-orange-500/50 hover:text-white"
                         }`}
                       >
-                        {genre}
+                        {GENRE_MAP[genre] || genre}
                       </button>
                     );
                   })}

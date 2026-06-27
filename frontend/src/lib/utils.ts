@@ -30,3 +30,25 @@ export function generateMovieDescription(rawTitle: string, genres: string[] = []
 
   return `Bộ phim "${titleClean}" là một tác phẩm điện ảnh xuất sắc ${genreText}, ${specificDesc} Tác phẩm đã nhận được nhiều lời khen ngợi từ giới phê bình và thu hút hàng triệu lượt xem trên toàn cầu.`;
 }
+
+export const GENRE_MAP: Record<string, string> = {
+  "All": "Tất cả",
+  "Action": "Hành động",
+  "Adventure": "Phiêu lưu",
+  "Animation": "Hoạt hình",
+  "Children's": "Trẻ em",
+  "Comedy": "Hài hước",
+  "Crime": "Tội phạm",
+  "Documentary": "Tài liệu",
+  "Drama": "Tâm lý",
+  "Fantasy": "Viễn tưởng",
+  "Film-Noir": "Phim đen",
+  "Horror": "Kinh dị",
+  "Musical": "Âm nhạc",
+  "Mystery": "Bí ẩn",
+  "Romance": "Tình cảm",
+  "Sci-Fi": "Khoa học viễn tưởng",
+  "Thriller": "Giật gân",
+  "War": "Chiến tranh",
+  "Western": "Viễn tây"
+};

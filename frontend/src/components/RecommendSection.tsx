@@ -11,6 +11,7 @@ const QUICK_USER_IDS = [1, 42, 100, 500];
 
 import MovieCard from "./MovieCard";
 import { useAuth } from "@/context/AuthContext";
+import { GENRE_MAP } from "@/lib/utils";
 
 // Component RecommendSection
 // Giao diện nhập User ID và hiển thị kết quả gợi ý phim
@@ -272,24 +273,18 @@ export default function RecommendSection() {
                 </p>
                 <div className="flex flex-wrap justify-center gap-3">
                   {[
-                    { id: 'Action', name: 'Hành động' },
-                    { id: 'Comedy', name: 'Hài hước' },
-                    { id: 'Romance', name: 'Tình cảm' },
-                    { id: 'Sci-Fi', name: 'Viễn tưởng' },
-                    { id: 'Horror', name: 'Kinh dị' },
-                    { id: 'Drama', name: 'Tâm lý' },
-                    { id: 'Thriller', name: 'Giật gân' }
+                    "Action", "Adventure", "Animation", "Children's", "Comedy", "Crime", "Documentary", "Drama", "Fantasy", "Film-Noir", "Horror", "Musical", "Mystery", "Romance", "Sci-Fi", "Thriller", "War", "Western"
                   ].map((g) => (
                     <button
-                      key={g.id}
-                      onClick={() => handleGenreSelect(g.id)}
+                      key={g}
+                      onClick={() => handleGenreSelect(g)}
                       className={`px-5 py-2.5 rounded-full border transition-all duration-300 font-medium ${
-                        selectedGenre === g.id
+                        selectedGenre === g
                           ? "bg-orange-500 border-orange-400 text-white shadow-[0_0_15px_rgba(249,115,22,0.5)] scale-105"
                           : "bg-white/5 border-gray-600 text-gray-300 hover:bg-white/10 hover:border-orange-500/50 hover:text-white"
                       }`}
                     >
-                      {g.name}
+                      {GENRE_MAP[g] || g}
                     </button>
                   ))}
                 </div>
