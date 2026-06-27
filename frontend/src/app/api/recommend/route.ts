@@ -144,7 +144,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Gộp lại thành 10 phim
-      const finalMovies = [...top5Movies, ...selectedGenreMovies].filter(Boolean);
+      const finalMovies = [...top5Movies, ...selectedGenreMovies];
 
       movies = finalMovies.map((m: any) => ({
         movie_id: m._id,
