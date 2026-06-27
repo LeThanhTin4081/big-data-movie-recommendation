@@ -55,6 +55,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const loggedInUser: User = data.user;
         setUser(loggedInUser);
         localStorage.setItem("t3v_play_user", JSON.stringify(loggedInUser));
+
+        // Đồng bộ danh sách phim yêu thích
+        try {
+           const favRes = await fetch(`/api/user/favorites?userId=${loggedInUser.userId}`);
+           const favData = await favRes.json();
+           if (favData.success) {
+               const localFavs = JSON.parse(localStorage.getItem('t3v_favorites') || '[]');
+               const merged = Array.from(new Set([...localFavs, ...(favData.favorites || [])]));
+               localStorage.setItem('t3v_favorites', JSON.stringify(merged));
+               window.dispatchEvent(new Event('favoritesUpdated'));
+               
+               if (merged.length > (favData.favorites || []).length) {
+                   fetch('/api/user/favorites', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ userId: loggedInUser.userId, favorites: merged })
+                   });
+               }
+           }
+        } catch(e) {}
+
         setIsLoading(false);
         return { success: true };
       } else {
@@ -85,6 +106,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const loggedInUser: User = data.user;
         setUser(loggedInUser);
         localStorage.setItem("t3v_play_user", JSON.stringify(loggedInUser));
+
+        // Đồng bộ danh sách phim yêu thích
+        try {
+           const favRes = await fetch(`/api/user/favorites?userId=${loggedInUser.userId}`);
+           const favData = await favRes.json();
+           if (favData.success) {
+               const localFavs = JSON.parse(localStorage.getItem('t3v_favorites') || '[]');
+               const merged = Array.from(new Set([...localFavs, ...(favData.favorites || [])]));
+               localStorage.setItem('t3v_favorites', JSON.stringify(merged));
+               window.dispatchEvent(new Event('favoritesUpdated'));
+               
+               if (merged.length > (favData.favorites || []).length) {
+                   fetch('/api/user/favorites', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ userId: loggedInUser.userId, favorites: merged })
+                   });
+               }
+           }
+        } catch(e) {}
+
         setIsLoading(false);
         return { success: true };
       } else {
@@ -101,6 +143,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem("t3v_play_user");
+    localStorage.removeItem("t3v_favorites");
+    window.dispatchEvent(new Event('favoritesUpdated'));
   };
 
   return (
