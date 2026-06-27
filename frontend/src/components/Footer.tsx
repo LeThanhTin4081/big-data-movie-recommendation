@@ -204,17 +204,8 @@ export default function Footer() {
         <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-14 py-4">
             <div className="text-center space-y-1">
-              <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>
-                Người đại diện: Nhóm 5  — Đồ án môn BigData
-              </p>
-              <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>
-                Trường Đại học Giao Thông Vận Tải TP.HCM | Chuyên ngành : Khoa học dữ liệu
-              </p>
-              <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>
-                Dataset: MovieLens 100K — GroupLens Research, University of Minnesota
-              </p>
               <p className="text-[11px]" style={{ color: "rgba(255,255,255,0.22)" }}>
-                Giao diện tham khảo: FPT Play &nbsp;|&nbsp; © {new Date().getFullYear()} T3V Play. All rights reserved.
+                © {new Date().getFullYear()} T3V Play. All rights reserved.
               </p>
             </div>
           </div>

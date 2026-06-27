@@ -9,6 +9,7 @@ import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { Movie, Recommendation } from "@/lib/types";
+import { generateMovieDescription } from "@/lib/utils";
 
 // Props cho MovieCard
 interface MovieCardProps {
@@ -358,9 +359,9 @@ export default function MovieCard({
               ))}
             </div>
 
-            {/* Mô tả tự sinh siêu ngầu */}
+            {/* Mô tả tự sinh siêu ngầu cá nhân hóa */}
             <p className="text-[13px] text-gray-400 line-clamp-3 leading-relaxed">
-              {movie.description || `Một tác phẩm điện ảnh xuất sắc thuộc thể loại ${movie.genres.slice(0, 2).join(", ")}, mang đến những khung hình mãn nhãn và cốt truyện lôi cuốn. Được giới phê bình đánh giá cao và thu hút hàng triệu lượt xem trên toàn cầu.`}
+              {movie.description || generateMovieDescription(movie.title, movie.genres)}
             </p>
           </div>
         </div>,

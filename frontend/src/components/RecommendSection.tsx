@@ -21,6 +21,7 @@ export default function RecommendSection() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState<string>("");
+  const [isColdStart, setIsColdStart] = useState(false);
 
   // Tự động điền User ID khi người dùng đăng nhập/đổi tài khoản
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function RecommendSection() {
           const data = await res.json();
           if (res.ok && data.success) {
             setRecommendations(data.recommendations);
+            setIsColdStart(data.isColdStart || false);
           } else {
             setError(data.error || "Không thể tải gợi ý phim.");
           }
@@ -49,6 +51,7 @@ export default function RecommendSection() {
       setUserId("");
       setRecommendations([]);
       setHasSearched(false);
+      setIsColdStart(false);
     }
   }, [user]);
 
@@ -59,11 +62,11 @@ export default function RecommendSection() {
 
     // Validate input
     if (!userId || isNaN(id)) {
-      setError("Vui lòng nhập User ID hợp lệ (số từ 1 đến 943)");
+      setError("Vui lòng nhập User ID hợp lệ");
       return;
     }
-    if (id < 1 || id > 943) {
-      setError("User ID phải nằm trong khoảng 1 đến 943");
+    if (id < 1) {
+      setError("User ID phải lớn hơn 0");
       return;
     }
 
@@ -76,6 +79,7 @@ export default function RecommendSection() {
       const data = await res.json();
       if (res.ok && data.success) {
         setRecommendations(data.recommendations);
+        setIsColdStart(data.isColdStart || false);
       } else {
         setError(data.error || "Không thể tải gợi ý phim.");
       }
@@ -108,9 +112,8 @@ export default function RecommendSection() {
             Gợi ý phim dành cho bạn
           </h2>
           <p className="text-gray-400 text-base max-w-2xl mx-auto">
-            Nhập User ID (1 - 943) để nhận danh sách 5 bộ phim được gợi ý bởi
-            hệ thống Collaborative Filtering sử dụng thuật toán ALS trên Apache
-            Spark
+            Nhập User ID để nhận danh sách bộ phim được gợi ý bởi
+            hệ thống Collaborative Filtering sử dụng thuật toán ALS trên Apache Spark
           </p>
         </div>
 
@@ -236,14 +239,27 @@ export default function RecommendSection() {
         )}
 
         {/* KẾT QUẢ GỢI Ý */}
-        {!isLoading && hasSearched && (
-          <div className="animate-fadeInUp">
-            {recommendations.length > 0 ? (
-              <>
-                <h3 className="text-white text-xl font-bold mb-4 text-center">
-                  Top {recommendations.length} phim gợi ý cho User #{userId}
+        {hasSearched && recommendations.length > 0 && (
+          <div className="mt-8 animate-fade-in-up">
+            {isColdStart ? (
+              <div className="bg-orange-600/20 border border-orange-500/50 p-6 rounded-xl text-center mb-10 max-w-4xl mx-auto">
+                <h3 className="text-xl font-bold text-orange-400 mb-2">👋 Chào mừng người dùng mới!</h3>
+                <p className="text-gray-300">
+                  Vì bạn là người dùng mới tinh và chưa có lịch sử đánh giá phim (vấn đề Cold Start), 
+                  hệ thống tạm thời đề xuất ngẫu nhiên <strong className="text-white">10 bộ phim nổi bật nhất</strong> trong cơ sở dữ liệu. 
+                  Hãy tương tác với các bộ phim để AI bắt đầu học sở thích của bạn nhé!
+                </p>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between mb-8 border-b border-gray-800 pb-4">
+                <h3 className="text-2xl font-bold text-white flex items-center gap-3">
+                  <span className="w-2 h-8 bg-orange-500 rounded-full"></span>
+                  Gợi ý dành riêng cho User #{userId}
                 </h3>
-                <div className="flex justify-center gap-4 flex-wrap">
+              </div>
+            )}
+            
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
                   {recommendations.map((rec, index) => (
                     <MovieCard
                       key={rec.movie_id}
@@ -271,8 +287,10 @@ export default function RecommendSection() {
                     </p>
                   </div>
                 </div>
-              </>
-            ) : (
+          </div>
+        )}
+
+        {hasSearched && recommendations.length === 0 && !isLoading && (
               <div className="text-center py-8">
                 <div className="w-16 h-16 mx-auto mb-4 bg-gray-800 rounded-full flex items-center justify-center">
                   <svg
@@ -296,8 +314,6 @@ export default function RecommendSection() {
                   Thử các User ID có sẵn: {QUICK_USER_IDS.join(", ")}
                 </p>
               </div>
-            )}
-          </div>
         )}
       </div>
     </section>
