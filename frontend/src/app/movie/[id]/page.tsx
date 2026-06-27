@@ -23,6 +23,9 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   return { title: "Chi tiết phim - T3V Play" };
 }
 
+import { readFileSync } from "fs";
+import path from "path";
+
 export default async function MovieDetailPage({ params }: { params: { id: string } }) {
   const movieId = parseInt(params.id);
   if (isNaN(movieId)) return notFound();
@@ -32,10 +35,22 @@ export default async function MovieDetailPage({ params }: { params: { id: string
 
   if (!movie) return notFound();
 
+  // Load poster map from public folder
+  let realPosterUrl = null;
+  try {
+    const posterMapPath = path.join(process.cwd(), "public", "poster_map.json");
+    const posterMap = JSON.parse(readFileSync(posterMapPath, "utf-8"));
+    realPosterUrl = posterMap[movieId];
+  } catch (e) {
+    console.error("Could not load poster map");
+  }
+
   // Xử lý các fallback data
   const fallbackGradient = "from-blue-950 via-blue-900 to-slate-900";
   const titleInitial = movie.title.charAt(0).toUpperCase();
-  const isFallbackImg = movie.poster_url?.includes("placeholder");
+  const isFallbackImg = !realPosterUrl;
+
+  const displayPosterUrl = realPosterUrl || movie.poster_url || "";
 
   return (
     <div className="w-full min-h-screen bg-black text-white font-sans antialiased selection:bg-orange-600 selection:text-white flex flex-col">
@@ -67,7 +82,7 @@ export default async function MovieDetailPage({ params }: { params: { id: string
               <div className="relative aspect-[2/3] w-full rounded-xl overflow-hidden shadow-2xl shadow-black/80 ring-1 ring-white/10">
                 {!isFallbackImg ? (
                   <Image
-                    src={movie.poster_url}
+                    src={displayPosterUrl}
                     alt={movie.title}
                     fill
                     unoptimized
@@ -111,12 +126,28 @@ export default async function MovieDetailPage({ params }: { params: { id: string
 
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <button className="flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white px-8 py-3.5 rounded-lg font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-orange-600/30">
+                <a 
+                  href={`https://www.google.com/search?q=${encodeURIComponent("Xem phim " + movie.title)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-500 text-white px-8 py-3.5 rounded-lg font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-orange-600/30"
+                >
                   <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+                  Xem Phim
+                </a>
+                <a 
+                  href={`https://www.youtube.com/results?search_query=${encodeURIComponent(movie.title + " trailer")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 bg-slate-800 hover:bg-slate-700 text-white px-8 py-3.5 rounded-lg font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-slate-900/30 border border-slate-700"
+                >
                   Xem Trailer
-                </button>
-                <Link href="/" className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-8 py-3.5 rounded-lg font-bold text-lg backdrop-blur-sm transition-colors border border-white/5">
-                  Quay lại Trang chủ
+                </a>
+                <Link 
+                  href="/" 
+                  className="flex items-center justify-center bg-transparent hover:bg-white/5 text-gray-300 px-8 py-3.5 rounded-lg font-bold text-lg transition-colors border border-gray-600 hover:border-gray-400"
+                >
+                  Quay lại
                 </Link>
               </div>
             </div>
