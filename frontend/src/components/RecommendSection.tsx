@@ -298,25 +298,8 @@ export default function RecommendSection() {
               </div>
             )}
             
-            {/* Hàng 1: Top 5 phim trong tập train (Phổ biến) */}
+            {/* Hàng 1: Top 5 phim gợi ý (Dự đoán) */}
             <div className="mb-10">
-              <h4 className="text-xl font-bold text-white mb-4 border-l-4 border-orange-500 pl-3">
-                Top 5 phim thịnh hành nhất
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                {recommendations.slice(0, 5).map((rec, index) => (
-                  <MovieCard
-                    key={`train-${rec.movie_id}-${index}`}
-                    movie={rec}
-                    variant="recommendation"
-                    index={index}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Hàng 2: Top 5 phim gợi ý (Dự đoán) */}
-            <div>
               <h4 className="text-xl font-bold text-white mb-4 border-l-4 border-blue-500 pl-3">
                 Top 5 phim bạn có thể thích
               </h4>
@@ -327,6 +310,23 @@ export default function RecommendSection() {
                     movie={rec}
                     variant="recommendation"
                     index={index + 5}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Hàng 2: Top 5 phim trong tập train (Phổ biến) */}
+            <div>
+              <h4 className="text-xl font-bold text-white mb-4 border-l-4 border-orange-500 pl-3">
+                Top 5 phim thịnh hành nhất
+              </h4>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
+                {recommendations.slice(0, 5).map((rec, index) => (
+                  <MovieCard
+                    key={`train-${rec.movie_id}-${index}`}
+                    movie={rec}
+                    variant="recommendation"
+                    index={index}
                   />
                 ))}
               </div>
