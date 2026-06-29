@@ -309,7 +309,7 @@ export default function RecommendSection() {
                     key={`rec-${rec.movie_id}-${index}`}
                     movie={rec}
                     variant="recommendation"
-                    index={index + 5}
+                    index={index}
                   />
                 ))}
               </div>
@@ -326,7 +326,7 @@ export default function RecommendSection() {
                     key={`train-${rec.movie_id}-${index}`}
                     movie={rec}
                     variant="recommendation"
-                    index={index}
+                    index={index + 5}
                   />
                 ))}
               </div>
