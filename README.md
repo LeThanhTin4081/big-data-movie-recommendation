@@ -41,7 +41,7 @@ Invoke-WebRequest -Uri "https://files.grouplens.org/datasets/movielens/ml-100k.z
 Expand-Archive -Path "ml-100k.zip" -DestinationPath "." -Force
 
 # 4. Dọn dẹp thùng rác (Xóa file zip cho nhẹ máy)
-Remove-Item -Path "ml-100k.zip" -Forceee
+Remove-Item -Path "ml-100k.zip" -Force
 ```
 
 Sau khi chạy xong, bạn sẽ thấy thư mục `data/ml-100k` xuất hiện đầy đủ trên máy bạn (gồm file `u.data` và `u.item`). Lúc này bạn có thể bắt tay vào code phần Spark ETL được rồi!
