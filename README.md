@@ -3,11 +3,11 @@
 Chào mừng đến với kho lưu trữ (Repository) mã nguồn mở của dự án **Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn**. Dự án áp dụng kiến trúc chuẩn của Dữ liệu lớn (Big Data) bao gồm **Apache Spark** (Xử lý phân tán) và **MongoDB** (Lớp lưu trữ MongoDB tốc độ cao).
 
 
-## 🚀 Kiến trúc Hệ thốngggg
+## 🚀 Kiến trúc Hệ thống
 1. **Luồng tính toán ẩn (Offline):** Dữ liệu thô $\rightarrow$ `src/etl` (Làm sạch) $\rightarrow$ `src/ml` (Chạy AI/ALS).
 2. **Luồng phục vụ (Online):** Kết quả AI $\rightarrow$ `src/nosql` (Lưu trữ) $\rightarrow$ `src/web` (Giao diện siêu tốc).
 
-## 👥 Phân Công Công Việc
+## 👥 Phân Công Công Việcccc
 Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 
 ---
