@@ -12,7 +12,7 @@ Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 
 ---
 
-## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!!!)
+## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!)
 
 > [!WARNING]
 > **KHÔNG BAO GIỜ PUSH DATA LÊN GITHUB!**
@@ -46,7 +46,7 @@ Remove-Item -Path "ml-100k.zip" -Force
 
 Sau khi chạy xong, bạn sẽ thấy thư mục `data/ml-100k` xuất hiện đầy đủ trên máy bạn (gồm file `u.data` và `u.item`). Lúc này bạn có thể bắt tay vào code phần Spark ETL được rồi!
 
-## 📂 Cấu Trúc Thư Mục Chuẩn
+## 📂 Cấu Trúc Thư Mục Chuẩnnnn
 
 Dự án được phân chia thành các module độc lập giúp các thành viên dễ dàng code và quản lý:
 
