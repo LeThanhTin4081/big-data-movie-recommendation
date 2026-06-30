@@ -22,7 +22,7 @@ Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 
 Vì Git không chứa data và mật khẩu bảo mật, nên khi bạn tải code về máy tính cá nhân, bạn phải thực hiện **2 bước bắt buộc** dưới đây:
 
-#### BƯỚC 1: Cấu hình biến môi trường (.env)
+#### BƯỚC 1: Cấu hình biến môi trường (.envvv)
 1. Copy file `.env.example` và đổi tên bản sao thành `.env` (chỉ có dấu chấm và chữ env).
 2. Mở file `.env` lên và điền chuỗi kết nối MongoDB thật (do nhóm trưởng cung cấp) vào biến `MONGO_URI`.
 
