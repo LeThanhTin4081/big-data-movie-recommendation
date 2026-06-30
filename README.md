@@ -12,10 +12,10 @@ Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 
 ---
 
-## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!)
+## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!!!)
 
 > [!WARNING]
-> **KHÔNG BAO GIỜ PUSH DATA LÊN GITHUB!****
+> **KHÔNG BAO GIỜ PUSH DATA LÊN GITHUB!**
 > Đây là dự án Big Data, dữ liệu có thể từ vài MB đến hàng chục GB. Việc nhồi nhét cục data lên GitHub sẽ làm "nổ" dung lượng kho lưu trữ, gây lỗi kẹt mạng và cho thấy sự thiếu chuyên nghiệp. Thư mục `data/` đã được cấu hình ẩn đi trong `.gitignore`.
 
 ### Cần làm gì khi Pull / Clone code về máy?
