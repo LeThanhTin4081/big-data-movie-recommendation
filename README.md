@@ -12,7 +12,7 @@ Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 
 ---
 
-## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!!!)
+## ⚠️ Hướng Dẫn Cho Các Thành Viên (Quan Trọng!!!!)
 
 > [!WARNING]
 > **KHÔNG BAO GIỜ PUSH DATA LÊN GITHUB!**
