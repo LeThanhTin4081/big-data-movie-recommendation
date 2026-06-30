@@ -46,7 +46,7 @@ Remove-Item -Path "ml-100k.zip" -Force
 
 Sau khi chạy xong, bạn sẽ thấy thư mục `data/ml-100k` xuất hiện đầy đủ trên máy bạn (gồm file `u.data` và `u.item`). Lúc này bạn có thể bắt tay vào code phần Spark ETL được rồi!
 
-## 📂 Cấu Trúc Thư Mục Chuẩnnnn
+## 📂 Cấu Trúc Thư Mục Chuẩn
 
 Dự án được phân chia thành các module độc lập giúp các thành viên dễ dàng code và quản lý:
 
@@ -68,5 +68,5 @@ bigdata_project/
 ├── .env.example        # File mẫu chứa cấu hình biến môi trường (Ví dụ: Link kết nối DB).
 ├── docker-compose.yml  # File cấu hình Docker để chạy môi trường Spark và Web.
 ├── .gitignore          # File cấu hình Git để ẩn các file không cần thiết (cache, log, data).
-└── README.md           # File tổng quan bạn đang đọc.
+└── README.md           # File tổng quan bạn đangggggg đọc.
 ```
