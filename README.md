@@ -18,7 +18,7 @@ Xem chi tiết tại: [Kế hoạch 1 Tuần](docs/1_ke_hoach_nhom_1_tuan.md).
 > **KHÔNG BAO GIỜ PUSH DATA LÊN GITHUB!**
 > Đây là dự án Big Data, dữ liệu có thể từ vài MB đến hàng chục GB. Việc nhồi nhét cục data lên GitHub sẽ làm "nổ" dung lượng kho lưu trữ, gây lỗi kẹt mạng và cho thấy sự thiếu chuyên nghiệp. Thư mục `data/` đã được cấu hình ẩn đi trong `.gitignore`.
 
-### Cần làm gì khi Pull / Clone code về máy???
+### Cần làm gì khi Pull / Clone code về máy?
 
 Vì Git không chứa data và mật khẩu bảo mật, nên khi bạn tải code về máy tính cá nhân, bạn phải thực hiện **2 bước bắt buộc** dưới đây:
 
