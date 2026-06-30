@@ -1,4 +1,4 @@
-# 🍿 Hệ Thống Gợi Ý Phim Quy Mô Lớn (Big Data) Final Project
+# 🍿 Hệ Thống Gợi Ý Phim Quy Mô Lớn (Big Data) Final Projectttt
 
 Chào mừng đến với kho lưu trữ (Repository) mã nguồn mở của dự án **Thiết kế và Triển khai Hệ thống Gợi ý Phim Quy mô lớn**. Dự án áp dụng kiến trúc chuẩn của Dữ liệu lớn (Big Data) bao gồm **Apache Spark** (Xử lý phân tán) và **MongoDB** (Lớp lưu trữ MongoDB tốc độ cao).
 
